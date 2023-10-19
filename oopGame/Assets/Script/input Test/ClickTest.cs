@@ -32,16 +32,26 @@ public class ClickTest : MonoBehaviour
 
         if(Physics.Raycast(ray: ray, hitInfo: out RaycastHit hit) && hit.collider)
         {
-            Debug.Log (hit.collider.gameObject.name);
+            //Debug.Log (hit.collider.gameObject.name);
             if (hit.collider.gameObject.GetComponent<BasicPlatform>())
             {
-                this.gameObject.GetComponent<BaseUnit>().MoveTo(hit.collider.gameObject.GetComponent<BasicPlatform>());
                 GameObject target = hit.collider.gameObject.GetComponent<BasicPlatform>().gameObject;
-                Vector3 directionToTarget = target.transform.position - this.transform.position ;
-                Vector3 newFacingDirection = new Vector3(directionToTarget.x, directionToTarget.y, this.transform.position.z);
-                Debug.Log(Vector3.Angle(target.transform.position, transform.forward));
-               // this.transform.Rotate(0, this.transform.rotation.y+90, 0);
+                transform.LookAt(new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z));
+
+                this.gameObject.GetComponent<BaseUnit>().MoveTo(hit.collider.gameObject.GetComponent<BasicPlatform>());
+               
+
                 
+              //  Debug.Log("Player position "+transform.position) ;
+                //Debug.Log("Object position " + target.transform.position);
+
+                /*  Vector3 noZaxisPosition = new Vector3(target.transform.position.x, this.gameObject.transform.position.y, target.transform.position.z);
+                  Vector3 directionToTarget = noZaxisPosition - this.transform.position ;
+                  Vector3 newFacingDirection = new Vector3(directionToTarget.x, directionToTarget.y, this.transform.position.z);
+                  Debug.Log(Vector3.Angle(noZaxisPosition, transform.forward));
+                  this.transform.right = directionToTarget;*/
+
+
             }
             
         }

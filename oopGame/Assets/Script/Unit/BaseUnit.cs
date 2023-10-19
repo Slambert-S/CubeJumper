@@ -5,9 +5,13 @@ using UnityEngine;
 public class BaseUnit : MonoBehaviour
 {
     private int mouvmentSpeed = 1;  //need to encapsulate
+    [SerializeField]
+    private BasicPlatform platformPlayerStandingOn;
 
     [Header("Debug Section")]
     public BasicPlatform blockToMoveTO;
+
+    
 
     // Start is called before the first frame update
     void Start()
@@ -24,13 +28,49 @@ public class BaseUnit : MonoBehaviour
         }
     }
 
-    public virtual void MoveTo(BasicPlatform platform) {
+    public virtual void MoveTo(BasicPlatform selectedPlatform) {
 
-        if (platform.CanGoOnTop())
+        if (checkToMoveToNewBox(selectedPlatform)) //This is abstraction
         {
-            this.transform.position = platform.GetPositionOnTop().position;
+            this.transform.position = selectedPlatform.GetPositionOnTop().position;
+            platformPlayerStandingOn = selectedPlatform;
+        }
+        else
+        {
+            Debug.Log("Debug-BaseUnit-MoveTo : PLayer can not move to that block");
         }
     
+    }
+
+    private bool checkToMoveToNewBox(BasicPlatform selectedPlatform)
+    {
+        if (selectedPlatform.CanGoOnTop())
+        {
+            if (platformPlayerStandingOn != null)
+            {
+                if (selectedPlatform.checkIfBoxIsANeighbour(platformPlayerStandingOn.gameObject))
+                {
+                    Debug.Log("DEBUG-BaseUnit-MoveTo : is a neighbour");
+                    if (CheckIfplayerHaveEnuphMovement())
+                    {
+                        return true;
+
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogWarning("No platformStanding on");
+                return true; //To-Do change it later to fix the starting platform
+            }
+        }
+
+            return false;
+    }
+
+    private bool CheckIfplayerHaveEnuphMovement()
+    {
+        return true;
     }
 
 }
