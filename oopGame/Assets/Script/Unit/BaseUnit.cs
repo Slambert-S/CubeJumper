@@ -1,43 +1,78 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BaseUnit : MonoBehaviour
 {
-    private int mouvmentSpeed = 1;  //need to encapsulate
+    private int mouvmentActionStat = 1;  //need to encapsulate
+    private int mouvementActionAvailable;
     [SerializeField]
     private BasicPlatform platformPlayerStandingOn;
 
     [Header("Debug Section")]
     public BasicPlatform blockToMoveTO;
 
-    
+    private void OnEnable()
+    {
+        GameManager.OnGameStateChange += GameManagerOnGameStateChange;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnGameStateChange -= GameManagerOnGameStateChange;
+    }
+
+    private void GameManagerOnGameStateChange(GameManager.GameState obj)
+    {
+
+        if(obj == GameManager.GameState.PlayerTurn)
+        {
+            ResetPlayerMouvement();
+        }
+       // throw new NotImplementedException();
+    }
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
+        mouvementActionAvailable = mouvmentActionStat;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            MoveTo(blockToMoveTO);
-        }
+       
     }
 
     public virtual void MoveTo(BasicPlatform selectedPlatform) {
 
+        if(GameManager.Instance.State != GameManager.GameState.PlayerTurn)
+        {
+            return;
+        }
+
         if (checkToMoveToNewBox(selectedPlatform)) //This is abstraction
         {
+            if (platformPlayerStandingOn != null)
+            {
+                platformPlayerStandingOn.playerIsOnTop = false;
+            }
+            else
+            {
+                Debug.LogWarning("play does not have a reference to a platform it is standing on");
+            }
+
             this.transform.position = selectedPlatform.GetPositionOnTop().position;
             platformPlayerStandingOn = selectedPlatform;
+            platformPlayerStandingOn.playerIsOnTop = true;
+            mouvementActionAvailable--;
+            CheckEndPlayerTurn();
         }
         else
         {
             Debug.Log("Debug-BaseUnit-MoveTo : PLayer can not move to that block");
+            ResetPlayerMouvement();
         }
     
     }
@@ -70,7 +105,32 @@ public class BaseUnit : MonoBehaviour
 
     private bool CheckIfplayerHaveEnuphMovement()
     {
-        return true;
+        if(mouvementActionAvailable > 0)
+        {
+            return true;
+        }
+        else
+        {
+            Debug.Log("DEBUG-BaseUnit-CheckIfplayerHaveEnuphMovement : player dont have enuph mouvement");
+            return false;
+        }
     }
 
+    private void ResetPlayerMouvement()
+    {
+        mouvementActionAvailable = mouvmentActionStat;
+       // platformPlayerStandingOn.testDoAction();
+    }
+    private void CheckEndPlayerTurn()
+    {
+        if(mouvementActionAvailable == 0)
+        {
+            EndTurn();
+        }
+    }
+
+    private void EndTurn()
+    {
+        GameManager.Instance.UpdateGameState(GameManager.GameState.EnvironmentTurn);
+    }
 }

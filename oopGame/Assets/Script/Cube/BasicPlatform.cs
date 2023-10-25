@@ -5,21 +5,50 @@ using UnityEngine;
 public class BasicPlatform : MonoBehaviour
 {
     [SerializeField]
-    private List<BasicPlatform> neighbourList = new List<BasicPlatform>(4);
+    private List<GameObject> neighbourList = new List<GameObject>(4);
     [SerializeField]
     private Transform PositionReference;
-
+    [SerializeField]
     private bool CanBeWalkedON = true;
+
+    public bool playerIsOnTop { get; set; }
     // Start is called before the first frame update
     void Start()
+    {
+        DoInitialisation();
+
+
+    }
+    protected void DoInitialisation()
     {
         PositionReference = transform.parent.GetComponentInChildren<REF_centerPoint>().gameObject.transform;
 
 
         identifyNeighbour();
-
-
     }
+
+    private void OnEnable()
+    {
+        GameManager.OnGameStateChange += GameManagerOnGameStateChange;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnGameStateChange -= GameManagerOnGameStateChange;
+    }
+
+    private void GameManagerOnGameStateChange(GameManager.GameState obj)
+    {
+
+        if (obj == GameManager.GameState.EnvironmentTurn)
+        {
+            // ResetPlayerMouvement();
+           // this.testDoAction();
+        }
+        // throw new NotImplementedException();
+    }
+
+
 
     // Update is called once per frame
     void Update()
@@ -27,7 +56,7 @@ public class BasicPlatform : MonoBehaviour
         
     }
 
-    private void identifyNeighbour()
+    public void identifyNeighbour()
     {
         for (int i = 0; i < 4 ; i++) //list initialisation
         {
@@ -44,7 +73,7 @@ public class BasicPlatform : MonoBehaviour
     public bool checkIfBoxIsANeighbour(GameObject boxToFind)
     {
         
-        foreach(BasicPlatform neighbour in neighbourList)
+        foreach(GameObject neighbour in neighbourList)
         {
             if(neighbour!= null) //prevent calling error if the cube have an empty side
             {
@@ -68,7 +97,7 @@ public class BasicPlatform : MonoBehaviour
         return PositionReference;
     }
 
-    private BasicPlatform CastRayCast(Vector3 direction)
+    private GameObject CastRayCast(Vector3 direction)
     {
         RaycastHit hit;
         // Does the ray intersect any objects excluding the player layer
@@ -78,7 +107,7 @@ public class BasicPlatform : MonoBehaviour
             //Debug.Log("Did Hit");
             if (hit.collider.gameObject.GetComponent<BasicPlatform>())
             {
-                return hit.collider.gameObject.GetComponent<BasicPlatform>();
+                return hit.collider.gameObject.GetComponent<BasicPlatform>().gameObject;
             }
         }
         else
@@ -89,4 +118,20 @@ public class BasicPlatform : MonoBehaviour
         }
         return null;
     }
+
+    public virtual void testDoAction()
+    {
+        Debug.Log("Basic box did an action");
+    }
+
+    public void ChangeCubeObject(GameObject newBox)
+    {
+        if (!playerIsOnTop)
+        {
+            Instantiate(newBox, this.transform.position, this.transform.rotation, this.transform.parent.transform.parent);
+            GameObject.Destroy(this.gameObject.transform.parent.gameObject);
+        }
+
+    }
+
 }
