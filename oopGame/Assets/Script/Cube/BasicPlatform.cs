@@ -11,6 +11,9 @@ public class BasicPlatform : MonoBehaviour
     [SerializeField]
     private bool CanBeWalkedON = true;
 
+   // [SerializeField]
+    public BaseUnit unitOnTopReference; // To-Do improve privacy
+
     public bool playerIsOnTop { get; set; }
     // Start is called before the first frame update
     void Start()
@@ -58,10 +61,14 @@ public class BasicPlatform : MonoBehaviour
 
     public void identifyNeighbour()
     {
-        for (int i = 0; i < 4 ; i++) //list initialisation
+        if(neighbourList.Count < 1)
         {
-            neighbourList.Add(null);
+            for (int i = 0; i < 4; i++) //list initialisation
+            {
+                neighbourList.Add(null);
+            }
         }
+        
 
         neighbourList[0] = CastRayCast(this.transform.forward);
         neighbourList[1] = CastRayCast(this.transform.right);
@@ -70,17 +77,26 @@ public class BasicPlatform : MonoBehaviour
         
     }
 
+    /* 
+     * This script check if the block the player is standing on is a neighbour of the block the player clicked on.
+     * Make sur that the hitbox of all platfrom are long enuph.
+     */
     public bool checkIfBoxIsANeighbour(GameObject boxToFind)
     {
         
         foreach(GameObject neighbour in neighbourList)
         {
-            if(neighbour!= null) //prevent calling error if the cube have an empty side
+           // Debug.LogWarning("Inside check for neighbout");
+            if (neighbour!= null) //prevent calling error if the cube have an empty side
             {
                 if (neighbour.gameObject.GetInstanceID() == boxToFind.gameObject.GetInstanceID())
                 {
                     return true;
                 }
+            }
+            else
+            {
+                Debug.LogWarning("No neighbour");
             }
             
         }
@@ -121,7 +137,7 @@ public class BasicPlatform : MonoBehaviour
 
     public virtual void testDoAction()
     {
-        Debug.Log("Basic box did an action");
+       // Debug.Log("Basic box did an action");
     }
 
     public void ChangeCubeObject(GameObject newBox)

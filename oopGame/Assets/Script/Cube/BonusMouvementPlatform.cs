@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class testinSubPlatform : BasicPlatform
+public class BonusMouvementPlatform : BasicPlatform
 {
     // Start is called before the first frame update
     void Start()
@@ -10,21 +10,16 @@ public class testinSubPlatform : BasicPlatform
         base.DoInitialisation();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 
     public override void testDoAction()
     {
-        Debug.Log("sub box did an action");
-
-        /*if (playerIsOnTop == true)
+       
+        if (playerIsOnTop == true)
         {
             Debug.Log(unitOnTopReference);
-            BaseBuff newbuff = unitOnTopReference.gameObject.AddComponent<BaseBuff>();
+            BaseBuff newbuff = unitOnTopReference.gameObject.AddComponent<MouvementBuff>();
             unitOnTopReference.GetComponent<BuffManager>().addNewBuff(newbuff);
-        }*/
+        }
     }
 }

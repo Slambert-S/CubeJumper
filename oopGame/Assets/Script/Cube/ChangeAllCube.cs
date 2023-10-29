@@ -80,13 +80,13 @@ public class ChangeAllCube : MonoBehaviour
 
     private void changeAllCube()
     {
-        Debug.Log("In chaneAllCube");
+        //Debug.Log("In changeAllCube");
         StartCoroutine(changeAllCubeWithTimeDelay());
     }
     IEnumerator changeAllCubeWithTimeDelay()
     {
         //Print the time of when the function is first called.
-        Debug.Log("Started of shuffle turn at timestamp : " + Time.time);
+       // Debug.Log("Started of shuffle turn at timestamp : " + Time.time);
 
         //yield on a new YieldInstruction that waits for 5 seconds.
         yield return new WaitForSeconds(2);
@@ -102,20 +102,24 @@ public class ChangeAllCube : MonoBehaviour
             }
             cube.GetComponentInChildren<BasicPlatform>().ChangeCubeObject(cubePrefab[GetBoxType()]);
             i++;
-            Debug.Log("in the changeAllCube");
+           // Debug.Log("in the changeAllCube");
         }
 
         foreach (Transform cube in transform)
         {
             cube.GetComponentInChildren<BasicPlatform>().identifyNeighbour();
-            Debug.Log("I got my neighbour");
+           // Debug.Log("I got my neighbour");
         }
 
         yield return new WaitForSeconds(1);
+        foreach (StartPlatform platform in GameObject.FindObjectsOfType<StartPlatform>())
+        {
+            platform.identifyNeighbour();
+        };
         GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerTurn);
 
         //After we have waited 5 seconds print the time again.
-        Debug.Log("Finished of Shuffle turn at timestamp : " + Time.time);
+       // Debug.Log("Finished of Shuffle turn at timestamp : " + Time.time);
     }
 
     private int GetBoxType() //Select a random new block, some condition will have to be met for some type of block

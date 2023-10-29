@@ -29,6 +29,7 @@ public class BaseUnit : MonoBehaviour
         if(obj == GameManager.GameState.PlayerTurn)
         {
             ResetPlayerMouvement();
+            this.gameObject.GetComponent<BuffManager>().startOfTurn();
         }
        // throw new NotImplementedException();
     }
@@ -39,11 +40,13 @@ public class BaseUnit : MonoBehaviour
         mouvementActionAvailable = mouvmentActionStat;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-       
-    }
+
+    /* Section for all the function that change the stat of Base Unit*/
+   public void addBonusMouvement(int number)
+   {
+        mouvementActionAvailable += number;
+   }
+
 
     public virtual void MoveTo(BasicPlatform selectedPlatform) {
 
@@ -66,6 +69,7 @@ public class BaseUnit : MonoBehaviour
             this.transform.position = selectedPlatform.GetPositionOnTop().position;
             platformPlayerStandingOn = selectedPlatform;
             platformPlayerStandingOn.playerIsOnTop = true;
+            platformPlayerStandingOn.unitOnTopReference = this.gameObject.GetComponent<BaseUnit>();
             mouvementActionAvailable--;
             CheckEndPlayerTurn();
         }
@@ -81,11 +85,14 @@ public class BaseUnit : MonoBehaviour
     {
         if (selectedPlatform.CanGoOnTop())
         {
+            //Debug.LogWarning("Inside theToMoveToNewbox first if");
             if (platformPlayerStandingOn != null)
             {
+               // Debug.LogWarning("Inside theToMoveToNewbox second check if");
                 if (selectedPlatform.checkIfBoxIsANeighbour(platformPlayerStandingOn.gameObject))
                 {
-                    Debug.Log("DEBUG-BaseUnit-MoveTo : is a neighbour");
+
+                 //   Debug.Log("DEBUG-BaseUnit-MoveTo : is a neighbour");
                     if (CheckIfplayerHaveEnuphMovement())
                     {
                         return true;
@@ -99,8 +106,8 @@ public class BaseUnit : MonoBehaviour
                 return true; //To-Do change it later to fix the starting platform
             }
         }
-
-            return false;
+        Debug.LogWarning("Did not pass the first check in checkToMoveTONewBox");
+        return false;
     }
 
     private bool CheckIfplayerHaveEnuphMovement()

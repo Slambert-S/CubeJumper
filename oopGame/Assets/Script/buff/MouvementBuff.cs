@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObstacleBox : BasicPlatform
+public class MouvementBuff : BaseBuff
 {
     // Start is called before the first frame update
     void Start()
     {
-        base.DoInitialisation();
+        
     }
 
     // Update is called once per frame
@@ -16,8 +16,8 @@ public class ObstacleBox : BasicPlatform
         
     }
 
-    public override void testDoAction()
+    public override void activateEffect()
     {
-        //Debug.Log("This bloc has no special effect ");
+        this.gameObject.GetComponent<BaseUnit>().addBonusMouvement(1);
     }
 }

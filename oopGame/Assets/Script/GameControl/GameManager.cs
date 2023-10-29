@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
                 HandlePlayerReset();
                 break;
             case GameState.EnvironmentTurn:
+                Debug.Log("End of player turn");
                 //Activate all effect
                 HandleEnvironemnetTurn();
                 break;
@@ -74,7 +75,7 @@ public class GameManager : MonoBehaviour
                 }
                 cube.GetComponentInChildren<BasicPlatform>().testDoAction();
                 i++;
-                Debug.Log("in the changeAllCube");
+                //Debug.Log("in the changeAllCube");
             }
             StartCoroutine(TurnChangeDelay());
             /*
@@ -96,7 +97,7 @@ public class GameManager : MonoBehaviour
     IEnumerator TurnChangeDelay()
     {
         //Print the time of when the function is first called.
-        Debug.Log("Started of Environment turn at timestamp : " + Time.time);
+        //Debug.Log("Started of Environment turn at timestamp : " + Time.time);
 
         //yield on a new YieldInstruction that waits for 5 seconds.
         yield return new WaitForSeconds(1);
@@ -111,7 +112,7 @@ public class GameManager : MonoBehaviour
             UpdateGameState(GameState.PlayerTurn);
         };
         //After we have waited 5 seconds print the time again.
-        Debug.Log("Finished of Environment turn at timestamp : " + Time.time);
+        //Debug.Log("Finished of Environment turn at timestamp : " + Time.time);
     }
 
 
@@ -126,7 +127,7 @@ public class GameManager : MonoBehaviour
     }
     private void HandlePlayerReset()
     {
-
+        Debug.Log("Start player turn");
     }
 
     public enum GameState
