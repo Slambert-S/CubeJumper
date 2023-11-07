@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
@@ -17,11 +19,12 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        environmentTurnTracker = turnBetweenEnvironmentChange;
     }
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -47,10 +50,14 @@ public class GameManager : MonoBehaviour
             case GameState.EnvironementUpdate:
                 //shuffle the terrain
                 HandleTerrainShuffle();
+                
                 break;
         }
 
         OnGameStateChange?.Invoke(newState);
+        //update the UI after to make sure everything is ready to go
+        textUiManager.Instance.UpdateUiState(newState);
+
     }
 
     private void HandleTerrainShuffle()
@@ -64,7 +71,7 @@ public class GameManager : MonoBehaviour
     {
         if(mouvementBoxParent != null)
         {
-            environmentTurnTracker++;
+            environmentTurnTracker--;
             int i = 0;
 
             foreach (Transform cube in mouvementBoxParent.transform)
@@ -77,18 +84,10 @@ public class GameManager : MonoBehaviour
                 i++;
                 //Debug.Log("in the changeAllCube");
             }
+
+
             StartCoroutine(TurnChangeDelay());
-            /*
-            if (checkEnvironmentTurn())
-            {
-                environmentTurnTracker = 0;
-                UpdateGameState(GameState.EnvironementUpdate);
-            }
-            else
-            {
-                UpdateGameState(GameState.PlayerTurn);
-            };
-            */
+            
         }
 
    
@@ -100,15 +99,17 @@ public class GameManager : MonoBehaviour
         //Debug.Log("Started of Environment turn at timestamp : " + Time.time);
 
         //yield on a new YieldInstruction that waits for 5 seconds.
+        updateEnvironmentTurn();
         yield return new WaitForSeconds(1);
-
+     
         if (checkEnvironmentTurn())
         {
-            environmentTurnTracker = 0;
+            environmentTurnTracker = turnBetweenEnvironmentChange;
             UpdateGameState(GameState.EnvironementUpdate);
         }
         else
         {
+            
             UpdateGameState(GameState.PlayerTurn);
         };
         //After we have waited 5 seconds print the time again.
@@ -118,7 +119,7 @@ public class GameManager : MonoBehaviour
 
     private bool checkEnvironmentTurn()
     {
-        if(environmentTurnTracker >= turnBetweenEnvironmentChange)
+        if(environmentTurnTracker <= 0 )
         {
             return true;
         }
@@ -128,6 +129,12 @@ public class GameManager : MonoBehaviour
     private void HandlePlayerReset()
     {
         Debug.Log("Start player turn");
+        updateEnvironmentTurn();
+    }
+
+    private void updateEnvironmentTurn()
+    {
+        textUiManager.Instance.updateTurnBeforeChange(environmentTurnTracker);
     }
 
     public enum GameState

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class BaseUnit : MonoBehaviour
 {
+    [SerializeField]
+    private UnitType typeOfUnit;
     private int mouvmentActionStat = 1;  //need to encapsulate
     private int mouvementActionAvailable;
     [SerializeField]
@@ -30,6 +32,7 @@ public class BaseUnit : MonoBehaviour
         {
             ResetPlayerMouvement();
             this.gameObject.GetComponent<BuffManager>().startOfTurn();
+            UpdatePlayerMouvementUI();
         }
        // throw new NotImplementedException();
     }
@@ -38,6 +41,7 @@ public class BaseUnit : MonoBehaviour
     private void Start()
     {
         mouvementActionAvailable = mouvmentActionStat;
+        UpdatePlayerMouvementUI();
     }
 
 
@@ -71,6 +75,7 @@ public class BaseUnit : MonoBehaviour
             platformPlayerStandingOn.playerIsOnTop = true;
             platformPlayerStandingOn.unitOnTopReference = this.gameObject.GetComponent<BaseUnit>();
             mouvementActionAvailable--;
+            UpdatePlayerMouvementUI();
             CheckEndPlayerTurn();
         }
         else
@@ -126,7 +131,16 @@ public class BaseUnit : MonoBehaviour
     private void ResetPlayerMouvement()
     {
         mouvementActionAvailable = mouvmentActionStat;
+        UpdatePlayerMouvementUI();
        // platformPlayerStandingOn.testDoAction();
+    }
+
+    private void UpdatePlayerMouvementUI()
+    {
+        if(typeOfUnit == UnitType.player)
+        {
+            textUiManager.Instance.updatePlayerMouvementUi(mouvementActionAvailable);
+        }
     }
     private void CheckEndPlayerTurn()
     {
@@ -139,5 +153,11 @@ public class BaseUnit : MonoBehaviour
     private void EndTurn()
     {
         GameManager.Instance.UpdateGameState(GameManager.GameState.EnvironmentTurn);
+    }
+
+    public enum UnitType
+    {
+        player,
+        AI
     }
 }
