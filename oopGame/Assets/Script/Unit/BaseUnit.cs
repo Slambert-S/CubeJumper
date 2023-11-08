@@ -70,10 +70,8 @@ public class BaseUnit : MonoBehaviour
                 Debug.LogWarning("play does not have a reference to a platform it is standing on");
             }
 
-            this.transform.position = selectedPlatform.GetPositionOnTop().position;
-            platformPlayerStandingOn = selectedPlatform;
-            platformPlayerStandingOn.playerIsOnTop = true;
-            platformPlayerStandingOn.unitOnTopReference = this.gameObject.GetComponent<BaseUnit>();
+            MoveUnitVariableUpdate(selectedPlatform);
+           
             mouvementActionAvailable--;
             UpdatePlayerMouvementUI();
             CheckEndPlayerTurn();
@@ -113,6 +111,24 @@ public class BaseUnit : MonoBehaviour
         }
         Debug.LogWarning("Did not pass the first check in checkToMoveTONewBox");
         return false;
+    }
+
+    private void MoveUnitVariableUpdate(BasicPlatform platfromToMoveTo)
+    {
+        this.transform.position = platfromToMoveTo.GetPositionOnTop().position;
+        platformPlayerStandingOn.playerIsOnTop = false;
+        platformPlayerStandingOn.unitOnTopReference = null;
+        platformPlayerStandingOn = platfromToMoveTo;
+        platformPlayerStandingOn.playerIsOnTop = true;
+        platformPlayerStandingOn.unitOnTopReference = this.gameObject.GetComponent<BaseUnit>();
+    }
+
+    public virtual void PushUnit(BasicPlatform finalPlatform,direction direction )
+    {
+        //Instan move unit
+        MoveUnitVariableUpdate(finalPlatform);
+
+
     }
 
     private bool CheckIfplayerHaveEnuphMovement()
@@ -160,4 +176,13 @@ public class BaseUnit : MonoBehaviour
         player,
         AI
     }
+
+    public enum direction { 
+        Up,
+        Right,
+        Down,
+        Left
+
+    }
+
 }

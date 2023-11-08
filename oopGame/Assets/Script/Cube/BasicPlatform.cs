@@ -5,7 +5,7 @@ using UnityEngine;
 public class BasicPlatform : MonoBehaviour
 {
     [SerializeField]
-    private List<GameObject> neighbourList = new List<GameObject>(4);
+    protected List<GameObject> neighbourList = new List<GameObject>(4);
     [SerializeField]
     private Transform PositionReference;
     [SerializeField]
@@ -138,6 +138,38 @@ public class BasicPlatform : MonoBehaviour
     public virtual void testDoAction()
     {
        // Debug.Log("Basic box did an action");
+    }
+
+    public BasicPlatform GetInfoBeforePushingPlayer(GameObject neighbour , int side , int level, out bool fellOf)
+    {
+     
+        if(level > 0)
+        {
+            level--;
+            if (neighbourList[side] == null)
+            {
+                Debug.Log("Player Would have fall");
+                fellOf = true;
+                return this;
+              
+            }
+            if(neighbourList[side].GetComponent<BasicPlatform>().CanBeWalkedON == false)
+            {
+                Debug.Log("Player hit a rock");
+                fellOf = false;
+                return this;
+            }
+            // recursive call to the next neighbour
+            BasicPlatform tempNeighbour = neighbourList[side].GetComponent<BasicPlatform>().GetInfoBeforePushingPlayer(neighbour, side, level, out fellOf);
+
+            return tempNeighbour;
+        }
+        else
+        {
+            fellOf = false;
+            return this;
+        }
+  
     }
 
     public void ChangeCubeObject(GameObject newBox)

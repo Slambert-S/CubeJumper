@@ -72,26 +72,31 @@ public class GameManager : MonoBehaviour
         if(mouvementBoxParent != null)
         {
             environmentTurnTracker--;
-            int i = 0;
-
-            foreach (Transform cube in mouvementBoxParent.transform)
-            {
-                if (i >= 50)
-                {
-                    break;
-                }
-                cube.GetComponentInChildren<BasicPlatform>().testDoAction();
-                i++;
-                //Debug.Log("in the changeAllCube");
-            }
-
-
-            StartCoroutine(TurnChangeDelay());
             
+
+            StartCoroutine(SmallDelay(1));
+           
         }
 
    
         
+    }
+    IEnumerator SmallDelay(int delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        int i = 0;
+        foreach (Transform cube in mouvementBoxParent.transform)
+        {
+            if (i >= 50)
+            {
+                break;
+            }
+            cube.GetComponentInChildren<BasicPlatform>().testDoAction();
+            i++;
+            //Debug.Log("in the changeAllCube");
+        }
+        StartCoroutine(TurnChangeDelay());
+
     }
     IEnumerator TurnChangeDelay()
     {
