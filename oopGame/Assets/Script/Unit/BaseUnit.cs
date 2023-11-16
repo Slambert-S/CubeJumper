@@ -121,6 +121,7 @@ public class BaseUnit : MonoBehaviour
         platformPlayerStandingOn = platfromToMoveTo;
         platformPlayerStandingOn.playerIsOnTop = true;
         platformPlayerStandingOn.unitOnTopReference = this.gameObject.GetComponent<BaseUnit>();
+        platformPlayerStandingOn.UnitMovedOnTop();
     }
 
     public virtual void PushUnit(BasicPlatform finalPlatform,direction direction )
@@ -160,6 +161,10 @@ public class BaseUnit : MonoBehaviour
     }
     private void CheckEndPlayerTurn()
     {
+        if(GameManager.Instance.State == GameManager.GameState.GameEnded)
+        {
+            return;
+        }
         if(mouvementActionAvailable == 0)
         {
             EndTurn();
