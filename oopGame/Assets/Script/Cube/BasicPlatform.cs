@@ -139,6 +139,10 @@ public class BasicPlatform : MonoBehaviour
     {
        // Debug.Log("Basic box did an action");
     }
+    public virtual void UnitMovedOnTop()
+    {
+
+    }
 
     public BasicPlatform GetInfoBeforePushingPlayer(GameObject neighbour , int side , int level, out bool fellOf)
     {

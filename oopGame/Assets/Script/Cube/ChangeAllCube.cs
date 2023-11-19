@@ -116,6 +116,11 @@ public class ChangeAllCube : MonoBehaviour
         {
             platform.identifyNeighbour();
         };
+
+        foreach(EndPlatform platform in GameObject.FindObjectsOfType<EndPlatform>())
+        {
+            platform.identifyNeighbour();
+        }
         GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerTurn);
 
         //After we have waited 5 seconds print the time again.

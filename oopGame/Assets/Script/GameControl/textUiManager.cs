@@ -14,6 +14,7 @@ public class textUiManager : MonoBehaviour
     public Color PlayerTurnColour;
     public Color EnvironmentTurnColour;
     public Color EnvironmentChangeColour;
+    public Color GameEndedcolour;
 
 
     private void Awake()
@@ -56,6 +57,13 @@ public class textUiManager : MonoBehaviour
             case GameManager.GameState.EnvironementUpdate:
                 //change to shuffeling
                 turnIndicator.text = "Envirnment changing";
+                turnIndicator.color = EnvironmentChangeColour;
+                // change colour
+
+                break;
+            case GameManager.GameState.GameEnded:
+                //change to shuffeling
+                turnIndicator.text = "Game Ended";
                 turnIndicator.color = EnvironmentChangeColour;
                 // change colour
 

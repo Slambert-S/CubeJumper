@@ -52,12 +52,22 @@ public class GameManager : MonoBehaviour
                 HandleTerrainShuffle();
                 
                 break;
+            case GameState.GameEnded:
+                //shuffle the terrain
+                HandleHandGame();
+
+                break;
         }
 
         OnGameStateChange?.Invoke(newState);
         //update the UI after to make sure everything is ready to go
         textUiManager.Instance.UpdateUiState(newState);
 
+    }
+
+    private void HandleHandGame()
+    {
+        //
     }
 
     private void HandleTerrainShuffle()
@@ -146,6 +156,7 @@ public class GameManager : MonoBehaviour
     {
         PlayerTurn,
         EnvironmentTurn,
-        EnvironementUpdate
+        EnvironementUpdate,
+        GameEnded
     }
 }
