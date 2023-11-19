@@ -3,10 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(unitStat))]
 public class BaseUnit : MonoBehaviour
 {
     [SerializeField]
     private UnitType typeOfUnit;
+
+    [SerializeField]
+    private unitStat statRef;
     private int mouvmentActionStat = 1;  //need to encapsulate
     private int mouvementActionAvailable;
     [SerializeField]
@@ -41,6 +45,7 @@ public class BaseUnit : MonoBehaviour
     private void Start()
     {
         mouvementActionAvailable = mouvmentActionStat;
+        statRef = this.gameObject.GetComponent<unitStat>();
         UpdatePlayerMouvementUI();
     }
 
@@ -49,6 +54,11 @@ public class BaseUnit : MonoBehaviour
    public void addBonusMouvement(int number)
    {
         mouvementActionAvailable += number;
+   }
+
+   public void changeHpValue(int value)
+   {
+        statRef.ChangeHP = value;
    }
 
 

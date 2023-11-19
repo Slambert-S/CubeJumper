@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PushPlatfrom : BasicPlatform
 {
-    private int pushDistance = 2;
+    private int pushDistance = 5;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,7 +27,12 @@ public class PushPlatfrom : BasicPlatform
                 
                 //use out to get multiple return info
                 BasicPlatform locationAfterPush = neighbourList[i].GetComponent<BasicPlatform>().GetInfoBeforePushingPlayer(this.gameObject, i, pushDistance,out bool fellOf);
-                neighbourList[i].GetComponent<BasicPlatform>().unitOnTopReference.PushUnit(locationAfterPush, (BaseUnit.direction)1);
+                BaseUnit unitReference = neighbourList[i].GetComponent<BasicPlatform>().unitOnTopReference;
+                unitReference.PushUnit(locationAfterPush, (BaseUnit.direction)1);
+                if (fellOf)
+                {
+                    unitReference.changeHpValue(-2);
+                }
                 Debug.Log("This is the final place and fell of = "+ fellOf, locationAfterPush);
             }
         }

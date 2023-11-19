@@ -8,9 +8,14 @@ public class textUiManager : MonoBehaviour
 {
 
     public static textUiManager Instance;
-    public TMP_Text turnIndicator;
-    public TMP_Text playerMouvementIndicator;
-    public TMP_Text turnNumberIndicator;
+    [SerializeField]
+    private TMP_Text turnIndicator;
+    [SerializeField]
+    private TMP_Text playerMouvementIndicator;
+    [SerializeField]
+    private TMP_Text turnNumberIndicator;
+    [SerializeField]
+    private TMP_Text playerHpIndicator;
     public Color PlayerTurnColour;
     public Color EnvironmentTurnColour;
     public Color EnvironmentChangeColour;
@@ -74,6 +79,11 @@ public class textUiManager : MonoBehaviour
     public void updatePlayerMouvementUi(int nbMouvement)
     {
         playerMouvementIndicator.text = "Mouvement : " + nbMouvement;
+    }
+
+    public void updatePlayerHpUi(int hpValue)
+    {
+        playerHpIndicator.text = "HP : " + hpValue;
     }
 
     public void updateTurnBeforeChange(int numberTurn)
