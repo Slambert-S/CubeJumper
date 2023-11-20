@@ -5,6 +5,7 @@ using UnityEngine;
 public class unitStat : MonoBehaviour
 {
     // Start is called before the first frame update
+    [SerializeField]
     private int maxHP = 8;
     private int _currentHP;
     public int CurrentHP
