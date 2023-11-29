@@ -139,6 +139,10 @@ public class BasicPlatform : MonoBehaviour
     {
        // Debug.Log("Basic box did an action");
     }
+
+    /// <summary>
+    /// Virtual methode : is use to trigger special action when player move on top of the platfrom.
+    /// </summary>
     public virtual void UnitMovedOnTop()
     {
 

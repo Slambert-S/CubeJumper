@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject mouvementBoxParent;
     private int environmentTurnTracker = 0;
-    public int turnBetweenEnvironmentChange = 2;
+    public int turnBetweenEnvironmentChange = 3;
 
     private void Awake()
     {
@@ -35,6 +35,10 @@ public class GameManager : MonoBehaviour
 
     public void UpdateGameState(GameState newState)
     {
+        if(State == GameManager.GameState.GameEnded)
+        {
+            return;
+        }
         State = newState;
         switch (newState)
         {
@@ -68,6 +72,7 @@ public class GameManager : MonoBehaviour
     private void HandleHandGame()
     {
         //
+       // Time.timeScale = 0;
     }
 
     private void HandleTerrainShuffle()
@@ -85,7 +90,11 @@ public class GameManager : MonoBehaviour
             
 
             StartCoroutine(SmallDelay(1));
-           
+
+        }
+        else
+        {
+            Debug.LogWarning("Need to add link to the list to mouvement box parent");
         }
 
    

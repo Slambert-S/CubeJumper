@@ -19,14 +19,15 @@ public class BaseUnit : MonoBehaviour
     [SerializeField]
     private GameObject UnitSkin;
 
+    public bool moving { get; private set; } = false;
+    private Vector3 targetedPlatfromPosition;
+    [SerializeField]
+    private float jumpSpeed = 5;
+
     [Header("Debug Section")]
     public BasicPlatform blockToMoveTO;
 
-    //TO do : to clean when refactoring the mouvement
-    public bool moving = false;
-    public bool setUpDone = false;
-    public Vector3 targetedPosition;
-    public float speed = 1;
+   
 
     private void OnEnable()
     {
@@ -61,9 +62,11 @@ public class BaseUnit : MonoBehaviour
 
     private void Update()
     {
+
+        //Call the moveUnitFunction only when moving is true; moving == true whan the unit need to move to reach a destination
         if (moving)
         {
-            moveUnit();
+            moveUnitOverTime();
         }
     }
 
@@ -80,13 +83,22 @@ public class BaseUnit : MonoBehaviour
    }
 
 
-    public virtual void MoveTo(BasicPlatform selectedPlatform) {
+    /// <summary>
+    /// Function to handle all the logic to move a unit from one block to another one.
+    /// </summary>
+    /// <param name="selectedPlatform"></param>
+    public virtual void MoveToBlock(BasicPlatform selectedPlatform) {
 
         if(UnitSkin == null)
         {
             UnitSkin = this.transform.GetChild(0).gameObject;
         }
         if(GameManager.Instance.State != GameManager.GameState.PlayerTurn)
+        {
+            return;
+        }
+        //Block the player from moving again before finishing the moving animation.
+        if (moving)
         {
             return;
         }
@@ -110,7 +122,7 @@ public class BaseUnit : MonoBehaviour
         }
         else
         {
-            Debug.Log("Debug-BaseUnit-MoveTo : PLayer can not move to that block");
+            Debug.Log("Debug-BaseUnit-MoveToBlock : PLayer can not move to that block");
             ResetPlayerMouvement();
         }
     
@@ -127,7 +139,7 @@ public class BaseUnit : MonoBehaviour
                 if (selectedPlatform.checkIfBoxIsANeighbour(platformPlayerStandingOn.gameObject))
                 {
 
-                 //   Debug.Log("DEBUG-BaseUnit-MoveTo : is a neighbour");
+                 //   Debug.Log("DEBUG-BaseUnit-MoveToBlock : is a neighbour");
                     if (CheckIfplayerHaveEnuphMovement())
                     {
                         return true;
@@ -147,15 +159,11 @@ public class BaseUnit : MonoBehaviour
 
     private void MoveUnitVariableUpdate(BasicPlatform platfromToMoveTo)
     {
-        debugJumpTest();
-        
-        // Debugging section
-        targetedPosition = platfromToMoveTo.GetPositionOnTop().position;
-
+        //Jump animation setUp;
+        JumpAnimation();
+        targetedPlatfromPosition = platfromToMoveTo.GetPositionOnTop().position;
         moving = true;
 
-        ///
-       // this.transform.position = platfromToMoveTo.GetPositionOnTop().position;
         platformPlayerStandingOn.playerIsOnTop = false;
         platformPlayerStandingOn.unitOnTopReference = null;
         platformPlayerStandingOn = platfromToMoveTo;
@@ -165,33 +173,40 @@ public class BaseUnit : MonoBehaviour
     }
 
     //To do : refactor the jump feature 
-    private void debugJumpTest()
+    private void JumpAnimation()
     {
         moving = true;
         Rigidbody rgbd = UnitSkin.GetComponent<Rigidbody>();
         rgbd.AddForce(Vector3.up * 3 ,ForceMode.Impulse);
-        UnitSkin.GetComponent<Animator>().SetFloat("Speed_f", 0.26f);
+        //UnitSkin.GetComponent<Animator>().SetFloat("Speed_f", 0.26f);
+        
         UnitSkin.GetComponent<Animator>().SetTrigger("Jump_trig");
         //UnitSkin.GetComponent<Animator>().SetBool("Jump_b", false);
     }
     
     // To do : refactor the move Unit
-    private void moveUnit()
+    /// <summary>
+    /// When call every frame, the function will move the unit toward a targeted position. over time
+    /// </summary>
+    private void moveUnitOverTime()
     {
-        var step = speed * Time.deltaTime; // calculate distance to move
-        transform.position = Vector3.MoveTowards(transform.position, targetedPosition, step);
+        var step = jumpSpeed * Time.deltaTime; // calculate distance to move
+        transform.position = Vector3.MoveTowards(transform.position, targetedPlatfromPosition, step);
 
         // Check if the position of the cube and sphere are approximately equal.
-        if (Vector3.Distance(transform.position, targetedPosition) < 0.001f)
+        if (Vector3.Distance(transform.position, targetedPlatfromPosition) < 0.001f)
         {
             // Swap the position of the cylinder.
-            //targetedPosition *= -1.0f;
-            transform.position = targetedPosition;
+            //targetedPlatfromPosition *= -1.0f;
+            transform.position = targetedPlatfromPosition;
             moving = false;
             UnitSkin.GetComponent<Animator>().SetFloat("Speed_f", 0.0f);
+            targetedPlatfromPosition = Vector3.zero;
         }
     }
 
+    //Force push a unit in one direction
+    //To-do : add animation and mouvement over time
     public virtual void PushUnit(BasicPlatform finalPlatform,direction direction )
     {
         //Instan move unit

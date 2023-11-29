@@ -44,9 +44,14 @@ public class PlayerClick : MonoBehaviour
             if (hit.collider.gameObject.GetComponent<BasicPlatform>() && GameManager.Instance.State == GameManager.GameState.PlayerTurn)
             {
                 GameObject target = hit.collider.gameObject.GetComponent<BasicPlatform>().gameObject;
-                transform.LookAt(new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z));
 
-                this.gameObject.GetComponent<BaseUnit>().MoveTo(hit.collider.gameObject.GetComponent<BasicPlatform>());
+                // Block the model from rotating while jumping from one block to the other
+                if (this.gameObject.GetComponent<BaseUnit>().moving == false)
+                {
+                    transform.LookAt(new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z));
+                }
+
+                this.gameObject.GetComponent<BaseUnit>().MoveToBlock(hit.collider.gameObject.GetComponent<BasicPlatform>());
 
             }
 

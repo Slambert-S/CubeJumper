@@ -28,7 +28,7 @@ public class PushPlatfrom : BasicPlatform
                 //use out to get multiple return info
                 BasicPlatform locationAfterPush = neighbourList[i].GetComponent<BasicPlatform>().GetInfoBeforePushingPlayer(this.gameObject, i, pushDistance,out bool fellOf);
                 BaseUnit unitReference = neighbourList[i].GetComponent<BasicPlatform>().unitOnTopReference;
-                unitReference.PushUnit(locationAfterPush, (BaseUnit.direction)1);
+                unitReference.PushUnit(locationAfterPush, (BaseUnit.direction)i);
                 if (fellOf)
                 {
                     unitReference.changeHpValue(-2);
