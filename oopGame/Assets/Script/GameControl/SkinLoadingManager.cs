@@ -32,8 +32,8 @@ public class SkinLoadingManager : MonoBehaviour
             BoxCollider playerBoxColider = playerModel.AddComponent<BoxCollider>();
             playerBoxColider.center = new Vector3(0, 1.5f, 0);
             playerBoxColider.size = new Vector3(1.5f, 3.0f, 1.5f);
-            playerRef.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX;
-            playerRef.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
+            playerRef.GetComponentInChildren<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX;
+            playerRef.GetComponentInChildren<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
         }
 
         if (SkinDatabase.Instance.getPartnerSkin() >= 0)

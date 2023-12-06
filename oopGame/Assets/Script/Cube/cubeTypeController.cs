@@ -23,7 +23,7 @@ public class cubeTypeController : MonoBehaviour
         if(fixType == false)
         {
             cubeType = newType;
-            this.GetComponentInChildren<BasicPlatform>().ChangeCubeObject(this.transform.parent.gameObject.GetComponent<ChangeAllCube>().cubePrefab[(int)cubeType], cubeType);
+            this.GetComponentInChildren<BasicPlatform>().ChangeCubeObject(this.transform.parent.gameObject.GetComponent<ChangeAllCube>().cubePrefabWithRating[(int)cubeType].spawnObject, cubeType);
         }
      
     }

@@ -100,6 +100,7 @@ public class ChangeAllCube : MonoBehaviour
         if (Application.isPlaying)
         {
             yield return new WaitForSeconds(2);
+            BoxGenerationLogic.Instance.resetValue();
         }
         else
         {
@@ -118,7 +119,7 @@ public class ChangeAllCube : MonoBehaviour
                 break;
             }
             int newBoxTypeIndex = GetBoxType();
-            cube.GetComponentInChildren<BasicPlatform>().ChangeCubeObject(cubePrefab[newBoxTypeIndex],(cubeTypeController.CubeType) newBoxTypeIndex);
+            cube.GetComponentInChildren<BasicPlatform>().ChangeCubeObject(cubePrefabWithRating[newBoxTypeIndex].spawnObject,(cubeTypeController.CubeType) newBoxTypeIndex);
             i++;
            // Debug.Log("in the changeAllCube");
         }
@@ -169,13 +170,13 @@ public class ChangeAllCube : MonoBehaviour
             infiniteLoopPrevention++;
             if (Application.isPlaying)
             {
-                boxIndex = Random.Range(0, numberOfBoxType);
+                boxIndex = getCustumProbability();
                 boxTypeIsAvailable = BoxGenerationLogic.Instance.checkBoxAvalability((cubeTypeController.CubeType)boxIndex);
             }
             else
             {
                 Debug.Log("Custom probability result : " + getCustumProbability());
-                boxIndex = Random.Range(0, cubePrefab.Count);
+                boxIndex = getCustumProbability();
                 boxTypeIsAvailable = this.GetComponent<BoxGenerationLogic>().checkBoxAvalability((cubeTypeController.CubeType)boxIndex);
                 Debug.Log(boxIndex);
             }
