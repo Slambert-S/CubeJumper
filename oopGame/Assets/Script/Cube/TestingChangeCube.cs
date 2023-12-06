@@ -44,7 +44,7 @@ public class TestingChangeCube : MonoBehaviour
             {
                 break;
             }
-            cube.GetComponentInChildren<BasicPlatform>().ChangeCubeObject(cubePrefab[0]);
+            cube.GetComponentInChildren<BasicPlatform>().ChangeCubeObject(cubePrefab[0],cubeTypeController.CubeType.Normal);
             i++;
             Debug.Log("in the changeAllCube");
         } 

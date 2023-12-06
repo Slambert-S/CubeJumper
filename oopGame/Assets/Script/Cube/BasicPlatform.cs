@@ -11,6 +11,8 @@ public class BasicPlatform : MonoBehaviour
     [SerializeField]
     private bool CanBeWalkedON = true;
 
+    private cubeTypeController.CubeType currentCubeType = cubeTypeController.CubeType.Normal;
+
    // [SerializeField]
     public BaseUnit unitOnTopReference; // To-Do improve privacy
 
@@ -180,13 +182,37 @@ public class BasicPlatform : MonoBehaviour
   
     }
 
-    public void ChangeCubeObject(GameObject newBox)
+    public void ChangeCubeObject(GameObject newBox, cubeTypeController.CubeType newCubeType)
     {
-        if (!playerIsOnTop)
+        bool fixType = this.transform.parent.transform.parent.GetComponent<cubeTypeController>().fixType;
+#if UNITY_EDITOR
+        if (!playerIsOnTop && fixType == false)
+        {
+
+            //To do  handle the generation logic when randomizing cube in editor mode
+            if (BoxGenerationLogic.Instance)
+            {
+                BoxGenerationLogic.Instance.removeOldBoxType(currentCubeType);
+                Instantiate(newBox, this.transform.position, this.transform.rotation, this.transform.parent.transform.parent);
+                // GameObject.Destroy(this.gameObject.transform.parent.gameObject);
+                DestroyImmediate(this.gameObject.transform.parent.gameObject);
+                BoxGenerationLogic.Instance.AddNewBoxType(newCubeType);
+            }
+            else
+            {
+                Debug.LogWarning("BoxGenerationLogic has no valid Instance");
+            }
+            
+        }
+#else
+
+        if (!playerIsOnTop && fixType == false)
         {
             Instantiate(newBox, this.transform.position, this.transform.rotation, this.transform.parent.transform.parent);
             GameObject.Destroy(this.gameObject.transform.parent.gameObject);
         }
+
+#endif
 
     }
 

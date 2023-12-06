@@ -8,6 +8,7 @@ public class ChangeAllCube : MonoBehaviour
     public List<GameObject> cubePrefab = new List<GameObject>();
     private PlayerAction playerClick;
     private InputAction debugClick;
+    
     [SerializeField]
     private int numberOfBoxType = 0;
     // Start is called before the first frame update
@@ -16,6 +17,7 @@ public class ChangeAllCube : MonoBehaviour
 
         playerClick = new PlayerAction();
         numberOfBoxType = cubePrefab.Count;
+
     }
   
   
@@ -74,6 +76,10 @@ public class ChangeAllCube : MonoBehaviour
          }
      }*/
 
+    public void debugChangeaAllCube()
+    {
+        changeAllCube();
+    }
 
   
 
@@ -96,11 +102,12 @@ public class ChangeAllCube : MonoBehaviour
 
         foreach (Transform cube in transform)
         {
-            if (i >= 50)
+            if (i >= 100)
             {
                 break;
             }
-            cube.GetComponentInChildren<BasicPlatform>().ChangeCubeObject(cubePrefab[GetBoxType()]);
+            int newBoxTypeIndex = GetBoxType();
+            cube.GetComponentInChildren<BasicPlatform>().ChangeCubeObject(cubePrefab[newBoxTypeIndex],(cubeTypeController.CubeType) newBoxTypeIndex);
             i++;
            // Debug.Log("in the changeAllCube");
         }
@@ -121,14 +128,46 @@ public class ChangeAllCube : MonoBehaviour
         {
             platform.identifyNeighbour();
         }
-        GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerTurn);
 
-        //After we have waited 5 seconds print the time again.
-       // Debug.Log("Finished of Shuffle turn at timestamp : " + Time.time);
+#if UNITY_EDITOR
+        if (Application.isPlaying)
+        {
+            GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerTurn);
+        }
+        
+#endif
+            //After we have waited 5 seconds print the time again.
+            // Debug.Log("Finished of Shuffle turn at timestamp : " + Time.time);
     }
 
     private int GetBoxType() //Select a random new block, some condition will have to be met for some type of block
     {
-        return Random.Range(0, numberOfBoxType);
+#if UNITY_EDITOR
+        int boxIndex = 0;
+        bool boxTypeIsAvailable = false;
+        int infiniteLoopPrevention = 0;
+        do
+        {
+            infiniteLoopPrevention++;
+            if (Application.isPlaying)
+            {
+                boxIndex = Random.Range(0, numberOfBoxType);
+            }
+            else
+            {
+                boxIndex = Random.Range(0, cubePrefab.Count);
+            }
+            boxTypeIsAvailable = BoxGenerationLogic.Instance.checkBoxAvalability((cubeTypeController.CubeType)boxIndex);
+            if(infiniteLoopPrevention >= 100)
+            {
+                boxTypeIsAvailable = true;
+                boxIndex = 0; // The Game will never be block if a basic bloc is added in extra
+            }
+        } while (boxTypeIsAvailable == false);
+        
+
+        return boxIndex;
+        
+#endif
     }
 }

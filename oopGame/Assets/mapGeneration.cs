@@ -38,6 +38,11 @@ public class mapGeneration : MonoBehaviour
         }
      }
 
+     public void randomizeCubeType()
+    {
+        this.gameObject.GetComponent<ChangeAllCube>().debugChangeaAllCube();
+    }
+
      public void GenerateLayout()
     {
         RemoveAllCube();
@@ -119,6 +124,13 @@ public class generateMap : Editor
             //call function
 
             map.GenerateLayout();
+        }
+
+        if (GUILayout.Button("Randomize Cube", GUILayout.Width(120f)))
+        {
+            //call function
+
+            map.randomizeCubeType();
         }
     }
 }
