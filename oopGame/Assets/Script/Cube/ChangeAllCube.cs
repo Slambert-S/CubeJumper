@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class ChangeAllCube : MonoBehaviour
 {
     public List<GameObject> cubePrefab = new List<GameObject>();
+    public SpawnValue[] cubePrefabWithRating ;
     private PlayerAction playerClick;
     private InputAction debugClick;
     
@@ -92,10 +93,20 @@ public class ChangeAllCube : MonoBehaviour
     IEnumerator changeAllCubeWithTimeDelay()
     {
         //Print the time of when the function is first called.
-       // Debug.Log("Started of shuffle turn at timestamp : " + Time.time);
+        // Debug.Log("Started of shuffle turn at timestamp : " + Time.time);
 
         //yield on a new YieldInstruction that waits for 5 seconds.
-        yield return new WaitForSeconds(2);
+#if UNITY_EDITOR
+        if (Application.isPlaying)
+        {
+            yield return new WaitForSeconds(2);
+        }
+        else
+        {
+            yield return new WaitForSeconds(0);
+        }
+
+#endif
 
 
         int i = 0;
@@ -117,8 +128,15 @@ public class ChangeAllCube : MonoBehaviour
             cube.GetComponentInChildren<BasicPlatform>().identifyNeighbour();
            // Debug.Log("I got my neighbour");
         }
+#if UNITY_EDITOR
+        if (Application.isPlaying)
+        {
+            yield return new WaitForSeconds(1);
+        }
 
-        yield return new WaitForSeconds(1);
+#endif
+
+
         foreach (StartPlatform platform in GameObject.FindObjectsOfType<StartPlatform>())
         {
             platform.identifyNeighbour();
@@ -152,12 +170,16 @@ public class ChangeAllCube : MonoBehaviour
             if (Application.isPlaying)
             {
                 boxIndex = Random.Range(0, numberOfBoxType);
+                boxTypeIsAvailable = BoxGenerationLogic.Instance.checkBoxAvalability((cubeTypeController.CubeType)boxIndex);
             }
             else
             {
+                Debug.Log("Custom probability result : " + getCustumProbability());
                 boxIndex = Random.Range(0, cubePrefab.Count);
+                boxTypeIsAvailable = this.GetComponent<BoxGenerationLogic>().checkBoxAvalability((cubeTypeController.CubeType)boxIndex);
+                Debug.Log(boxIndex);
             }
-            boxTypeIsAvailable = BoxGenerationLogic.Instance.checkBoxAvalability((cubeTypeController.CubeType)boxIndex);
+           // boxTypeIsAvailable = BoxGenerationLogic.Instance.checkBoxAvalability((cubeTypeController.CubeType)boxIndex);
             if(infiniteLoopPrevention >= 100)
             {
                 boxTypeIsAvailable = true;
@@ -170,4 +192,28 @@ public class ChangeAllCube : MonoBehaviour
         
 #endif
     }
+
+    private int getCustumProbability()
+    {
+        float number = Random.Range(0.0f, 100.0f);
+        int i  = 0;
+        foreach(SpawnValue boxTypeRef in cubePrefabWithRating)
+        {
+            if(number >= boxTypeRef.minPobabilityValue && number <= boxTypeRef.maxProbabilityValue)
+            {
+                return i;
+            }
+            i++;
+        }
+
+        return 0;
+    }
+}
+
+[System.Serializable]
+public class SpawnValue
+{
+    public GameObject spawnObject;
+    public float minPobabilityValue;
+    public float maxProbabilityValue;
 }

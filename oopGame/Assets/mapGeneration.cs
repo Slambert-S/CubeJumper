@@ -40,6 +40,7 @@ public class mapGeneration : MonoBehaviour
 
      public void randomizeCubeType()
     {
+        this.gameObject.GetComponent<BoxGenerationLogic>().resetValue();
         this.gameObject.GetComponent<ChangeAllCube>().debugChangeaAllCube();
     }
 

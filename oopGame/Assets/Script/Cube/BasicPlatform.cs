@@ -197,10 +197,19 @@ public class BasicPlatform : MonoBehaviour
                 // GameObject.Destroy(this.gameObject.transform.parent.gameObject);
                 DestroyImmediate(this.gameObject.transform.parent.gameObject);
                 BoxGenerationLogic.Instance.AddNewBoxType(newCubeType);
+                currentCubeType = newCubeType;
             }
             else
             {
-                Debug.LogWarning("BoxGenerationLogic has no valid Instance");
+                //Debug.LogWarning("BoxGenerationLogic has no valid Instance");
+                
+                BoxGenerationLogic refference = gameObject.transform.parent.parent.parent.GetComponent<BoxGenerationLogic>();
+                refference.removeOldBoxType(currentCubeType);
+                Instantiate(newBox, this.transform.position, this.transform.rotation, this.transform.parent.transform.parent);
+                // GameObject.Destroy(this.gameObject.transform.parent.gameObject);
+                DestroyImmediate(this.gameObject.transform.parent.gameObject);
+                refference.AddNewBoxType(newCubeType);
+                currentCubeType = newCubeType;
             }
             
         }

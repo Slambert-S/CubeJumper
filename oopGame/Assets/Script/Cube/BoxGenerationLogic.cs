@@ -21,8 +21,17 @@ public class BoxGenerationLogic : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        resetValue();
     }
 
+    public void resetValue()
+    {
+        currentBasicNb = 0;
+        currentBlockNb = 0;
+        currentBombNb = 0;
+        currentMouvementBonusNb = 0;
+        currentPushNb = 0;
+    }
     public bool checkBoxAvalability(cubeTypeController.CubeType cubeIndex)
     {
         switch (cubeIndex)
@@ -40,13 +49,13 @@ public class BoxGenerationLogic : MonoBehaviour
                 }
                 break;
             case cubeTypeController.CubeType.MouvementBonus:
-                if (currentBombNb < maxMouvementBonusNb)
+                if (currentMouvementBonusNb < maxMouvementBonusNb) 
                 {
                     return true;
                 }
                 break;
             case cubeTypeController.CubeType.Bomb:
-                if (currentMouvementBonusNb < maxBombNb)
+                if (currentBombNb < maxBombNb)
                 {
                     return true;
                 }
@@ -83,15 +92,15 @@ public class BoxGenerationLogic : MonoBehaviour
                 }
                 break;
             case cubeTypeController.CubeType.MouvementBonus:
-                if (currentBombNb > 0)
-                {
-                    currentBombNb--;
-                }
-                break;
-            case cubeTypeController.CubeType.Bomb:
                 if (currentMouvementBonusNb > 0)
                 {
                     currentMouvementBonusNb--;
+                }
+                break;
+            case cubeTypeController.CubeType.Bomb:
+                if (currentBombNb > 0)
+                {
+                    currentBombNb--;
                 }
                 break;
             case cubeTypeController.CubeType.Push:
@@ -122,12 +131,12 @@ public class BoxGenerationLogic : MonoBehaviour
                 break;
             case cubeTypeController.CubeType.MouvementBonus:
 
-                currentBombNb++;
+                currentMouvementBonusNb++;
 
                 break;
             case cubeTypeController.CubeType.Bomb:
 
-                currentMouvementBonusNb++;
+                currentBombNb ++;
 
                 break;
             case cubeTypeController.CubeType.Push:
