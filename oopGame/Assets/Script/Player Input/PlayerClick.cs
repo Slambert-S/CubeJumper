@@ -9,6 +9,7 @@ public class PlayerClick : MonoBehaviour
     private Camera mainCamera;
 
     private InputAction click;
+    private InputAction draging;
     private void Awake()
     {
         mainCamera = Camera.main;
@@ -21,8 +22,14 @@ public class PlayerClick : MonoBehaviour
         //mouseClickAction.performed += clickAction;
 
         click = playerControl.Player.Clicked;
+       // draging = playerControl.Player.Drag;
+        //playerControl.Player.debugKey.performed
+        //draging.Enable();
         click.Enable();
+        //draging.performed += testDraging;
+        //draging.canceled += testDraging;
         click.performed += clickAction;
+        click.canceled += clickAction;
 
     }
 
@@ -31,12 +38,25 @@ public class PlayerClick : MonoBehaviour
         //mouseClickAction.performed -= clickAction;
         //mouseClickAction.Disable();
         click.performed -= clickAction;
+        click.canceled -= clickAction;
         click.Disable();
+        //draging.Disable();
+        //draging.performed -= testDraging;
+        //draging.canceled -= testDraging;
     }
 
     private void clickAction(InputAction.CallbackContext context)
     {
+       /*
+        if (mainCamera.gameObject.GetComponent<CameraDrag>().checkIfCameraMoved == true)
+        {
+            Debug.Log("Dont move");
+            return;    
+        }
+        */
+       
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        
 
         if (Physics.Raycast(ray: ray, hitInfo: out RaycastHit hit) && hit.collider)
         {
@@ -56,5 +76,15 @@ public class PlayerClick : MonoBehaviour
             }
 
         }
+    }
+
+    private void testDraging(InputAction.CallbackContext context)
+    {
+        mainCamera.gameObject.GetComponent<CameraDrag>().testDraging(context);
+        Debug.Log(context.phase);
+        //print the current mouse position on the playing field  as a vector 2
+        //Debug.Log(context.ReadValue<Vector2>());
+
+        
     }
 }

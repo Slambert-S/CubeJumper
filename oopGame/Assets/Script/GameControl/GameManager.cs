@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour
         int i = 0;
         foreach (Transform cube in mouvementBoxParent.transform)
         {
-            if (i >= 50)
+            if (i >= 200)
             {
                 break;
             }
