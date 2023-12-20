@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PushPlatfrom : BasicPlatform
 {
-    private int pushDistance = 5;
+    private int pushDistance = 2;
     // Start is called before the first frame update
     void Start()
     {

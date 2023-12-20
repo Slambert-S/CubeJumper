@@ -11,6 +11,7 @@ public class BaseUnit : MonoBehaviour
 
     [SerializeField]
     private unitStat statRef;
+    [SerializeField]
     private int mouvmentActionStat = 1;  //need to encapsulate
     private int mouvementActionAvailable;
     [SerializeField]

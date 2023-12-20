@@ -9,8 +9,11 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public GameState State;
+    public GM_endOfGame endOfGameManager;
 
     public static event Action<GameState> OnGameStateChange;
+
+
     [SerializeField]
     private GameObject mouvementBoxParent;
     private int environmentTurnTracker = 0;
@@ -20,6 +23,7 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         environmentTurnTracker = turnBetweenEnvironmentChange;
+        endOfGameManager = this.GetComponent<GM_endOfGame>();
     }
     // Start is called before the first frame update
     void Start()
@@ -71,8 +75,8 @@ public class GameManager : MonoBehaviour
 
     private void HandleHandGame()
     {
-        //
-       // Time.timeScale = 0;
+        endOfGameManager.executeEndOfGame();
+        //Time.timeScale = 0;
     }
 
     private void HandleTerrainShuffle()

@@ -79,6 +79,8 @@ public class CameraDrag : MonoBehaviour
             Vector3 pos = Camera.main.ScreenToViewportPoint(newDragPoint - dragOrigine);
             Vector3 mouve = new Vector3(pos.x * dragSpeed * -1, 0, pos.y * dragSpeed * -1);
 
+            //Vector3 mouve = new Vector3(pos.x * dragSpeed * -1, 0, 0);
+
             //The mouvement will be based on where the camera is looking;
             transform.parent.transform.Translate(mouve, Space.Self);
 

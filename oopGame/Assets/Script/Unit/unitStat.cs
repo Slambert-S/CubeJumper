@@ -6,7 +6,7 @@ public class unitStat : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField]
-    private int maxHP = 8;
+    private int maxHP = 10;
     private int _currentHP;
     public int CurrentHP
     {
@@ -42,6 +42,15 @@ public class unitStat : MonoBehaviour
             }
         }
     }
+
+    private void OnEnable()
+    {
+        GameManager.OnGameStateChange += checkIfDead;
+    }
+    private void OnDisable()
+    {
+        GameManager.OnGameStateChange -= checkIfDead;
+    }
     void Start()
     {
         CurrentHP = maxHP;
@@ -50,6 +59,27 @@ public class unitStat : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+       // checkIfDead();
+
+    }
+
+    private void checkIfDead()
+    {
+        if(_currentHP <= 0)
+        {
+            //Debug.Log("DEBUG : You dead");
+        }
+    }
+
+    private void checkIfDead(GameManager.GameState state)
+    {
+        if (_currentHP <= 0)
+        {
+            //Debug.Log("DEBUG : You dead");
+            GameManager.Instance.endOfGameManager.endReason = GM_endOfGame.GameEndedState.PlayerDeath;
+            GameManager.Instance.UpdateGameState(GameManager.GameState.GameEnded);
+        }
     }
 }
+
+

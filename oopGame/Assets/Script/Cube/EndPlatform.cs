@@ -25,6 +25,7 @@ public class EndPlatform : BasicPlatform
             if (condition == true) // To-Do update later to check for game win condition
             {
                 Debug.Log("reached end platfrom");
+                GameManager.Instance.endOfGameManager.endReason = GM_endOfGame.GameEndedState.GoalReached;
                 GameManager.Instance.UpdateGameState(GameManager.GameState.GameEnded);
             }
         }

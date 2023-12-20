@@ -21,6 +21,10 @@ public class textUiManager : MonoBehaviour
     public Color EnvironmentChangeColour;
     public Color GameEndedcolour;
 
+    public GameObject GameEndedCanvasRef;
+    [SerializeField]
+    private TMP_Text endOfGameMessage;
+
 
     private void Awake()
     {
@@ -70,6 +74,18 @@ public class textUiManager : MonoBehaviour
                 //change to shuffeling
                 turnIndicator.text = "Game Ended";
                 turnIndicator.color = EnvironmentChangeColour;
+                GameEndedCanvasRef.SetActive(true);
+
+                switch (GameManager.Instance.endOfGameManager.endReason)
+                {
+                    case GM_endOfGame.GameEndedState.GoalReached:
+                        endOfGameMessage.text = "You saved your partner";
+                        break;
+                    case GM_endOfGame.GameEndedState.PlayerDeath:
+                        endOfGameMessage.text = "You died";
+                        break;
+                }
+
                 // change colour
 
                 break;
