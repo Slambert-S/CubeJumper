@@ -16,10 +16,15 @@ public class BombPlatform : BasicPlatform
     [SerializeField]
     private bool hasExploded = false;
 
+    [SerializeField]
+    private AudioClip explosionSound;
+    private AudioSource audioSourc;
+
     // Start is called before the first frame update
     void Start()
     {
         base.DoInitialisation();
+        audioSourc = this.gameObject.GetComponent<AudioSource>();
         GameObject vfxParentRef = this.gameObject.transform.GetChild(0).GetChild(0).gameObject;
         BigExplosionRef = this.gameObject.transform.GetChild(0).Find("bigExplosions").GetComponent<ParticleSystem>();
         int nbChilde = vfxParentRef.transform.childCount;
@@ -64,6 +69,11 @@ public class BombPlatform : BasicPlatform
             if (nbTurnUntilExplosion == 1)
             {
                 //Explode the bomb
+                if (audioSourc != null)
+                {
+                    audioSourc.PlayOneShot(explosionSound);
+                }
+
                 BigExplosionRef.Play();
                 hasExploded = true;
                 GameObject parentOfBombVisual = this.gameObject.transform.GetChild(0).Find("bombVisual").gameObject;

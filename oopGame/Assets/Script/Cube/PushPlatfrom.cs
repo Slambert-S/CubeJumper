@@ -5,10 +5,14 @@ using UnityEngine;
 public class PushPlatfrom : BasicPlatform
 {
     private int pushDistance = 2;
+    [SerializeField]
+    private AudioClip pushSound;
+    private AudioSource audioSource;
     // Start is called before the first frame update
     void Start()
     {
         base.DoInitialisation();
+        audioSource = this.gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -28,6 +32,10 @@ public class PushPlatfrom : BasicPlatform
                 //use out to get multiple return info
                 BasicPlatform locationAfterPush = neighbourList[i].GetComponent<BasicPlatform>().GetInfoBeforePushingPlayer(this.gameObject, i, pushDistance,out bool fellOf);
                 BaseUnit unitReference = neighbourList[i].GetComponent<BasicPlatform>().unitOnTopReference;
+                if(audioSource != null)
+                {
+                    audioSource.PlayOneShot(pushSound);
+                }
                 unitReference.PushUnit(locationAfterPush, (BaseUnit.direction)i);
                 if (fellOf)
                 {

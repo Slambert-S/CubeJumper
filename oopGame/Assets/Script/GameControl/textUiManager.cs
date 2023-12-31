@@ -49,7 +49,7 @@ public class textUiManager : MonoBehaviour
         {
             case GameManager.GameState.PlayerTurn:
                 //Change to player turn
-                turnIndicator.text = "Player turn";
+                turnIndicator.text = "P";
                 turnIndicator.color = PlayerTurnColour;
                 //change colour
                 //reset  mouvement
@@ -58,14 +58,14 @@ public class textUiManager : MonoBehaviour
             case GameManager.GameState.EnvironmentTurn:
                 Debug.Log("End of player turn");
                 // Change to Encironement turn
-                turnIndicator.text = "Environment turn";
+                turnIndicator.text = "E";
                 turnIndicator.color = EnvironmentTurnColour;
                 //change coulour
 
                 break;
             case GameManager.GameState.EnvironementUpdate:
                 //change to shuffeling
-                turnIndicator.text = "Envirnment changing";
+                turnIndicator.text = "S";
                 turnIndicator.color = EnvironmentChangeColour;
                 // change colour
 
@@ -94,12 +94,12 @@ public class textUiManager : MonoBehaviour
 
     public void updatePlayerMouvementUi(int nbMouvement)
     {
-        playerMouvementIndicator.text = "Mouvement : " + nbMouvement;
+        playerMouvementIndicator.text = "" + nbMouvement;
     }
 
     public void updatePlayerHpUi(int hpValue)
     {
-        playerHpIndicator.text = "HP : " + hpValue;
+        playerHpIndicator.text = "" + hpValue;
     }
 
     public void updateTurnBeforeChange(int numberTurn)

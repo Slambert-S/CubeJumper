@@ -16,6 +16,9 @@ public class BaseUnit : MonoBehaviour
     private int mouvementActionAvailable;
     [SerializeField]
     private BasicPlatform platformPlayerStandingOn;
+    [SerializeField]
+    private AudioClip jumpSound;
+    private AudioSource audioSource;
 
     [SerializeField]
     private GameObject UnitSkin;
@@ -59,6 +62,7 @@ public class BaseUnit : MonoBehaviour
         mouvementActionAvailable = mouvmentActionStat;
         statRef = this.gameObject.GetComponent<unitStat>();
         UpdatePlayerMouvementUI();
+        audioSource = this.gameObject.GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -176,6 +180,7 @@ public class BaseUnit : MonoBehaviour
     //To do : refactor the jump feature 
     private void JumpAnimation()
     {
+        PlayJumpSound();
         moving = true;
         Rigidbody rgbd = UnitSkin.GetComponent<Rigidbody>();
         rgbd.AddForce(Vector3.up * 3 ,ForceMode.Impulse);
@@ -183,6 +188,26 @@ public class BaseUnit : MonoBehaviour
         
         UnitSkin.GetComponent<Animator>().SetTrigger("Jump_trig");
         //UnitSkin.GetComponent<Animator>().SetBool("Jump_b", false);
+    }
+
+    private void PlayJumpSound()
+    {
+
+        if (jumpSound == null)
+        {
+            Debug.Log("No Audio clip linked");
+            return;
+        }
+        else if(audioSource == null)
+        {
+
+            Debug.Log("No audio source linked");
+            return;
+        }
+        else
+        {
+            audioSource.PlayOneShot(jumpSound);
+        }
     }
     
     // To do : refactor the move Unit
