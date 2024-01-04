@@ -22,6 +22,7 @@ public class textUiManager : MonoBehaviour
     public Color GameEndedcolour;
 
     public GameObject GameEndedCanvasRef;
+    public GameObject gameUIRef;
     [SerializeField]
     private TMP_Text endOfGameMessage;
 
@@ -74,7 +75,24 @@ public class textUiManager : MonoBehaviour
                 //change to shuffeling
                 turnIndicator.text = "Game Ended";
                 turnIndicator.color = EnvironmentChangeColour;
-                GameEndedCanvasRef.SetActive(true);
+                
+                if(gameUIRef == null)
+                {
+                    Debug.LogWarning("No reference to gameUI in textUiManager");
+                }
+                else
+                {
+                    gameUIRef.SetActive(false);
+                }
+
+                if (GameEndedCanvasRef == null)
+                {
+                    Debug.LogWarning("No reference to GameEndedCanvasRef in textUiManager");
+                }
+                else
+                {
+                    GameEndedCanvasRef.SetActive(true);
+                }
 
                 switch (GameManager.Instance.endOfGameManager.endReason)
                 {

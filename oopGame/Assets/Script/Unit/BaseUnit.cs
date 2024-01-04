@@ -8,6 +8,7 @@ public class BaseUnit : MonoBehaviour
 {
     [SerializeField]
     private UnitType typeOfUnit;
+    public bool fallingOverboard = false;
 
     [SerializeField]
     private unitStat statRef;
@@ -22,9 +23,13 @@ public class BaseUnit : MonoBehaviour
 
     [SerializeField]
     private GameObject UnitSkin;
-
-    public bool moving { get; private set; } = false;
+    [SerializeField]
+    private float yDistenceCheckedWhenMoving;
+    [SerializeField]
+    public bool moving { [SerializeField]get; private set; } = false;
+    [SerializeField]
     private Vector3 targetedPlatfromPosition;
+    private Vector3 fallOffDirection;
     [SerializeField]
     private float jumpSpeed = 5;
 
@@ -119,7 +124,7 @@ public class BaseUnit : MonoBehaviour
                 Debug.LogWarning("play does not have a reference to a platform it is standing on");
             }
 
-            MoveUnitVariableUpdate(selectedPlatform);
+            MoveUnitVariableUpdate(selectedPlatform, JumpType.Jump);
            
             mouvementActionAvailable--;
             UpdatePlayerMouvementUI();
@@ -162,13 +167,14 @@ public class BaseUnit : MonoBehaviour
         return false;
     }
 
-    private void MoveUnitVariableUpdate(BasicPlatform platfromToMoveTo)
+    private void MoveUnitVariableUpdate(BasicPlatform platfromToMoveTo, JumpType jumpType)
     {
         //Jump animation setUp;
-        JumpAnimation();
+        JumpAnimation(jumpType);
         targetedPlatfromPosition = platfromToMoveTo.GetPositionOnTop().position;
-        moving = true;
 
+
+        moving = true;
         platformPlayerStandingOn.playerIsOnTop = false;
         platformPlayerStandingOn.unitOnTopReference = null;
         platformPlayerStandingOn = platfromToMoveTo;
@@ -178,13 +184,24 @@ public class BaseUnit : MonoBehaviour
     }
 
     //To do : refactor the jump feature 
-    private void JumpAnimation()
+    private void JumpAnimation(JumpType jumpType)
     {
+        float jumpForce = 0;
         PlayJumpSound();
+        switch (jumpType)
+        {
+            case JumpType.Jump:
+                jumpForce = 3f;
+                break;
+            case JumpType.HighJump:
+                jumpForce = 7f;
+                break;
+        }
+        
         moving = true;
         Rigidbody rgbd = UnitSkin.GetComponent<Rigidbody>();
-        rgbd.AddForce(Vector3.up * 3 ,ForceMode.Impulse);
-        //UnitSkin.GetComponent<Animator>().SetFloat("Speed_f", 0.26f);
+        rgbd.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        UnitSkin.GetComponent<Animator>().SetFloat("Speed_f", 0.26f);
         
         UnitSkin.GetComponent<Animator>().SetTrigger("Jump_trig");
         //UnitSkin.GetComponent<Animator>().SetBool("Jump_b", false);
@@ -217,26 +234,83 @@ public class BaseUnit : MonoBehaviour
     private void moveUnitOverTime()
     {
         var step = jumpSpeed * Time.deltaTime; // calculate distance to move
-        transform.position = Vector3.MoveTowards(transform.position, targetedPlatfromPosition, step);
-
+        
         // Check if the position of the cube and sphere are approximately equal.
-        if (Vector3.Distance(transform.position, targetedPlatfromPosition) < 0.001f)
+        //if falling overbord == false
+        if(fallingOverboard == false)
         {
-            // Swap the position of the cylinder.
-            //targetedPlatfromPosition *= -1.0f;
-            transform.position = targetedPlatfromPosition;
-            moving = false;
-            UnitSkin.GetComponent<Animator>().SetFloat("Speed_f", 0.0f);
-            targetedPlatfromPosition = Vector3.zero;
+            transform.position = Vector3.MoveTowards(transform.position, targetedPlatfromPosition, step);
+            if (Vector3.Distance(transform.position, targetedPlatfromPosition) < 0.0001f)
+            {
+                // Swap the position of the cylinder.
+                //targetedPlatfromPosition *= -1.0f;
+                //transform.position = targetedPlatfromPosition;
+
+                //check pour la positon tu model comparer au parent 
+                Debug.Log(UnitSkin.transform.localPosition.y);
+                if (UnitSkin.transform.localPosition.y < yDistenceCheckedWhenMoving)
+                {
+                    moveUnitOverTimeHelper();
+                }
+            }
         }
+        else
+        {
+            //Vector3 direction = transform.position();
+            transform.Translate(fallOffDirection*step, Space.World);
+            if(UnitSkin.GetComponent<unitModelColision>().touchedWater == true)
+            {
+                UnitSkin.GetComponent<unitModelColision>().touchedWaterUsed();
+                moveUnitOverTimeHelper();
+                fallingOverboard = false;
+
+            }
+
+        }
+        //fallingoverbord == true 
+        //check if model have hit the water plane
+        //if true : stop moving then set everything  back up on the block
+        
+    }
+    private void moveUnitOverTimeHelper()
+    {
+
+        this.transform.position = new Vector3(targetedPlatfromPosition.x, targetedPlatfromPosition.y, targetedPlatfromPosition.z);
+        this.transform.GetChild(0).transform.position = new Vector3(targetedPlatfromPosition.x, targetedPlatfromPosition.y, targetedPlatfromPosition.z);
+        UnitSkin.GetComponent<Animator>().SetFloat("Speed_f", 0.0f);
+        targetedPlatfromPosition = Vector3.zero;
+        moving = false;
+        
     }
 
     //Force push a unit in one direction
     //To-do : add animation and mouvement over time
     public virtual void PushUnit(BasicPlatform finalPlatform,direction direction )
     {
+
+        Vector3 generalDirection = DirectionAndRotation.LeveldTargetDirection(transform.position, finalPlatform.GetPositionOnTop().position) ;
+        Quaternion qRotation = Quaternion.LookRotation(generalDirection, Vector3.up);
+        this.transform.rotation = qRotation;
+        switch (direction)
+        {
+            case direction.Up:
+                fallOffDirection = new Vector3(0, 0, 1);
+                break;
+            case direction.Right:
+                fallOffDirection = new Vector3(1, 0, 0);
+                break;
+            case direction.Down:
+                fallOffDirection = new Vector3(0, 0, -1);
+                break;
+            case direction.Left:
+                fallOffDirection = new Vector3(-1, 0, 0);
+                break;
+            default:
+                break;
+        }
+
         //Instan move unit
-        MoveUnitVariableUpdate(finalPlatform);
+        MoveUnitVariableUpdate(finalPlatform, JumpType.HighJump);
 
 
     }
@@ -298,5 +372,9 @@ public class BaseUnit : MonoBehaviour
         Left
 
     }
-
+     public enum JumpType
+    {
+        Jump,
+        HighJump
+    }
 }

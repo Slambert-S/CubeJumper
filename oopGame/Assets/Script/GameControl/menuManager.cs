@@ -20,11 +20,13 @@ public class menuManager : MonoBehaviour
     public void GoToGameSceneDebug()
     {
         SceneManager.LoadScene(1);
+        Time.timeScale = 1;
     }
 
     public void GoToMenuSceneDebug()
     {
         SceneManager.LoadScene(0);
+        Time.timeScale = 1;
     }
 }
 

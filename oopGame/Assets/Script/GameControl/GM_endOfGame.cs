@@ -20,6 +20,7 @@ public class GM_endOfGame : MonoBehaviour
 
                 break;
         }
+        Time.timeScale = 0;
 
     }
 

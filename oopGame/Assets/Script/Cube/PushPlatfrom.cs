@@ -8,11 +8,14 @@ public class PushPlatfrom : BasicPlatform
     [SerializeField]
     private AudioClip pushSound;
     private AudioSource audioSource;
+    [SerializeField]
+    private ParticleSystem pushParticle;
     // Start is called before the first frame update
     void Start()
     {
         base.DoInitialisation();
         audioSource = this.gameObject.GetComponent<AudioSource>();
+        pushParticle = this.transform.parent.GetComponentInChildren<ParticleSystem>();
     }
 
     // Update is called once per frame
@@ -36,9 +39,33 @@ public class PushPlatfrom : BasicPlatform
                 {
                     audioSource.PlayOneShot(pushSound);
                 }
+                Vector3 particleDirection = new Vector3();
+                switch (i)
+                {
+                    case 0:
+                        particleDirection = new  Vector3(-180, 180, 0);
+                        break;
+                    case 1:
+                        particleDirection = new Vector3(-180, -90, 0);
+                        break;
+                    case 2:
+                        particleDirection = new Vector3(-180, 0, 0);
+                        break;
+                    case 3:
+                        particleDirection = new Vector3(-180, 90, 0);
+                        break;
+                    default:
+                        break;
+                }
+
+                pushParticle.transform.eulerAngles = particleDirection;
+                pushParticle.Play();
+                // faling overbord == true;
+                
                 unitReference.PushUnit(locationAfterPush, (BaseUnit.direction)i);
                 if (fellOf)
                 {
+                    unitReference.fallingOverboard = true;
                     unitReference.changeHpValue(-2);
                 }
                 Debug.Log("This is the final place and fell of = "+ fellOf, locationAfterPush);
