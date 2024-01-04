@@ -7,6 +7,7 @@ public class cubeTypeController : MonoBehaviour
 {
     private CubeType cubeType;
     public bool fixType = false;
+    public List<Material> listOfMaterial; 
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +27,12 @@ public class cubeTypeController : MonoBehaviour
             this.GetComponentInChildren<BasicPlatform>().ChangeCubeObject(this.transform.parent.gameObject.GetComponent<ChangeAllCube>().cubePrefabWithRating[(int)cubeType].spawnObject, cubeType);
         }
      
+    }
+
+    public void changeMaterial()
+    {
+        int selectedMat = Random.Range(0, listOfMaterial.Capacity);
+        this.gameObject.GetComponent<Renderer>().material = listOfMaterial[selectedMat];
     }
 
     public enum CubeType
@@ -61,7 +68,15 @@ public class ChangeCube : Editor
             controller.switchCubeType(option);
         }
 
-        
+        if (GUILayout.Button("changeMaterial", GUILayout.Width(120f)))
+        {
+            //call function
+
+            Debug.Log(option);
+            controller.changeMaterial();
+        }
+
+
     }
 }
 
