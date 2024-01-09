@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+[System.Serializable]
+public class SpawnValue
+{
+    public GameObject spawnObject;
+    public float minPobabilityValue;
+    public float maxProbabilityValue;
+}
 
 public class ChangeAllCube : MonoBehaviour
 {
@@ -96,6 +103,7 @@ public class ChangeAllCube : MonoBehaviour
         // Debug.Log("Started of shuffle turn at timestamp : " + Time.time);
 
         //yield on a new YieldInstruction that waits for 5 seconds.
+        
 #if UNITY_EDITOR
         if (Application.isPlaying)
         {
@@ -108,7 +116,7 @@ public class ChangeAllCube : MonoBehaviour
         }
 
 #endif
-
+        
 
         int i = 0;
 
@@ -129,6 +137,7 @@ public class ChangeAllCube : MonoBehaviour
             cube.GetComponentInChildren<BasicPlatform>().identifyNeighbour();
            // Debug.Log("I got my neighbour");
         }
+        
 #if UNITY_EDITOR
         if (Application.isPlaying)
         {
@@ -136,7 +145,7 @@ public class ChangeAllCube : MonoBehaviour
         }
 
 #endif
-
+        
 
         foreach (StartPlatform platform in GameObject.FindObjectsOfType<StartPlatform>())
         {
@@ -148,20 +157,24 @@ public class ChangeAllCube : MonoBehaviour
             platform.identifyNeighbour();
         }
 
-#if UNITY_EDITOR
+        
+//#if UNITY_EDITOR
         if (Application.isPlaying)
         {
             GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerTurn);
         }
         
-#endif
-            //After we have waited 5 seconds print the time again.
-            // Debug.Log("Finished of Shuffle turn at timestamp : " + Time.time);
+//#endif
+        
+        //After we have waited 5 seconds print the time again.
+        // Debug.Log("Finished of Shuffle turn at timestamp : " + Time.time);
+        yield return null;
     }
 
     private int GetBoxType() //Select a random new block, some condition will have to be met for some type of block
     {
-#if UNITY_EDITOR
+        
+//#if UNITY_EDITOR
         int boxIndex = 0;
         bool boxTypeIsAvailable = false;
         int infiniteLoopPrevention = 0;
@@ -191,7 +204,9 @@ public class ChangeAllCube : MonoBehaviour
 
         return boxIndex;
         
-#endif
+//#endif
+        
+  //      return 0;
     }
 
     private int getCustumProbability()
@@ -211,10 +226,4 @@ public class ChangeAllCube : MonoBehaviour
     }
 }
 
-[System.Serializable]
-public class SpawnValue
-{
-    public GameObject spawnObject;
-    public float minPobabilityValue;
-    public float maxProbabilityValue;
-}
+
