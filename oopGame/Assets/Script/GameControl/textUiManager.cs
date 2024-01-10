@@ -73,7 +73,8 @@ public class textUiManager : MonoBehaviour
                 break;
             case GameManager.GameState.GameEnded:
                 //change to shuffeling
-                turnIndicator.text = "Game Ended";
+                StartCoroutine("reachEndPlatfromTime");
+              /*  turnIndicator.text = "Game Ended";
                 turnIndicator.color = EnvironmentChangeColour;
                 
                 if(gameUIRef == null)
@@ -104,12 +105,48 @@ public class textUiManager : MonoBehaviour
                         break;
                 }
 
-                // change colour
+                // change colour*/
 
                 break;
         }
     }
 
+    IEnumerator reachEndPlatfromTime()
+    {
+        yield return new WaitForSeconds(2);
+        //Do animation
+        turnIndicator.text = "Game Ended";
+        turnIndicator.color = EnvironmentChangeColour;
+
+        if (gameUIRef == null)
+        {
+            Debug.LogWarning("No reference to gameUI in textUiManager");
+        }
+        else
+        {
+            gameUIRef.SetActive(false);
+        }
+
+        if (GameEndedCanvasRef == null)
+        {
+            Debug.LogWarning("No reference to GameEndedCanvasRef in textUiManager");
+        }
+        else
+        {
+            GameEndedCanvasRef.SetActive(true);
+        }
+
+        switch (GameManager.Instance.endOfGameManager.endReason)
+        {
+            case GM_endOfGame.GameEndedState.GoalReached:
+                endOfGameMessage.text = "You saved your partner";
+                break;
+            case GM_endOfGame.GameEndedState.PlayerDeath:
+                endOfGameMessage.text = "You died";
+                break;
+        }
+
+    }
     public void updatePlayerMouvementUi(int nbMouvement)
     {
         playerMouvementIndicator.text = "" + nbMouvement;

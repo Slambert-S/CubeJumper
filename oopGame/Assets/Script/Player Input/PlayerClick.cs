@@ -10,10 +10,12 @@ public class PlayerClick : MonoBehaviour
 
     private InputAction click;
     private InputAction draging;
+   
     private void Awake()
     {
         mainCamera = Camera.main;
         playerControl = new PlayerAction();
+        
     }
 
     private void OnEnable()
@@ -47,6 +49,8 @@ public class PlayerClick : MonoBehaviour
 
     private void clickAction(InputAction.CallbackContext context)
     {
+        int layerMask = 1<<3;
+        layerMask = ~layerMask;
         if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
             Debug.Log("OverGameObject");
@@ -61,9 +65,9 @@ public class PlayerClick : MonoBehaviour
         
        
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        
+       
 
-        if (Physics.Raycast(ray: ray, hitInfo: out RaycastHit hit) && hit.collider)
+        if (Physics.Raycast(ray: ray, out RaycastHit hit, Mathf.Infinity, layerMask) && hit.collider)
         {
             //Debug.Log (hit.collider.gameObject.name);
             if (hit.collider.gameObject.GetComponent<BasicPlatform>() && GameManager.Instance.State == GameManager.GameState.PlayerTurn)

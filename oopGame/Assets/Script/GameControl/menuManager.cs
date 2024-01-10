@@ -28,6 +28,10 @@ public class menuManager : MonoBehaviour
         SceneManager.LoadScene(0);
         Time.timeScale = 1;
     }
+    public void debugging()
+    {
+        Debug.Log("Click on selected");
+    }
 
     public void QuitApplication()
     {

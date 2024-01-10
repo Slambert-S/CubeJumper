@@ -40,7 +40,17 @@ public class unitStat : MonoBehaviour
             {
                 textUiManager.Instance.updatePlayerHpUi(_currentHP);
             }
+            if(value < 0)
+            {
+                StartCoroutine("PlayerLostlifeVisual");
+            }
         }
+    }
+    IEnumerator PlayerLostlifeVisual()
+    {
+        this.GetComponent<unitMaterielManager>().ActivateRedShader();
+        yield return new WaitForSeconds(1);
+        this.GetComponent<unitMaterielManager>().DeactivateRedShader();
     }
 
     private void OnEnable()

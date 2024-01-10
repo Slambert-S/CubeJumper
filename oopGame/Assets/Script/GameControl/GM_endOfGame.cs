@@ -18,12 +18,18 @@ public class GM_endOfGame : MonoBehaviour
             case GameEndedState.PlayerDeath:
                 Debug.Log("You are dead");
 
+                Time.timeScale = 0;
                 break;
         }
-        Time.timeScale = 0;
 
     }
 
+    IEnumerator reachEndPlatfromTime()
+    {
+       yield  return  new WaitForSeconds(2);
+        //Do animation
+
+    }
     public enum GameEndedState
     {
         PlayerDeath,

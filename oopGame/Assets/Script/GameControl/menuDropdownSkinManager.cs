@@ -16,6 +16,7 @@ public class menuDropdownSkinManager : MonoBehaviour
     // Start is called before the first frame update
     private void OnEnable()
     {
+        /*
         if(SkinDatabase.Instance != null)
         {
             skinDb = SkinDatabase.Instance;
@@ -29,11 +30,25 @@ public class menuDropdownSkinManager : MonoBehaviour
         dropdownRef.onValueChanged.AddListener(delegate
         {
             ChangeSelectedSkin(dropdownRef);
-        });
+        });*/
     }
     void Start()
     {
-        
+        if (SkinDatabase.Instance != null)
+        {
+            skinDb = SkinDatabase.Instance;
+        }
+        else
+        {
+            skinDb = GameObject.Find("SkinDB").gameObject.GetComponent<SkinDatabase>();
+        }
+        dropdownRef = this.gameObject.GetComponent<TMP_Dropdown>();
+        dropdownRef.value = -1;
+        dropdownRef.onValueChanged.AddListener(delegate
+        {
+            ChangeSelectedSkin(dropdownRef);
+        });
+
         InsertOptionFromDb();
         StartCoroutine(delayedStart());
         

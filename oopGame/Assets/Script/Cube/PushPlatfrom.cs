@@ -66,6 +66,7 @@ public class PushPlatfrom : BasicPlatform
                 if (fellOf)
                 {
                     unitReference.fallingOverboard = true;
+                  //  unitReference.transform.GetChild(1).gameObject.SetActive(true);
                     unitReference.changeHpValue(-2);
                 }
                 Debug.Log("This is the final place and fell of = "+ fellOf, locationAfterPush);

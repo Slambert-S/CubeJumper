@@ -21,6 +21,7 @@ public class skipTurnButton : MonoBehaviour
         if(GameManager.Instance.State == GameManager.GameState.PlayerTurn)
         {
             GameManager.Instance.UpdateGameState(GameManager.GameState.EnvironmentTurn);
+            GameManager.Instance.GetComponent<SkinLoadingManager>().playerRef.GetComponent<BaseUnit>().changeHpValue(-1);
         }
     }
 }

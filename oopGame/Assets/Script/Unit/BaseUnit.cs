@@ -41,7 +41,8 @@ public class BaseUnit : MonoBehaviour
     private void OnEnable()
     {
         GameManager.OnGameStateChange += GameManagerOnGameStateChange;
-        UnitSkin = this.transform.GetChild(0).gameObject;
+        helperLinkUnitSkin();
+        
     }
 
     private void OnDisable()
@@ -68,6 +69,8 @@ public class BaseUnit : MonoBehaviour
         statRef = this.gameObject.GetComponent<unitStat>();
         UpdatePlayerMouvementUI();
         audioSource = this.gameObject.GetComponent<AudioSource>();
+
+
     }
 
     private void Update()
@@ -92,6 +95,11 @@ public class BaseUnit : MonoBehaviour
         statRef.ChangeHP = value;
    }
 
+    private void helperLinkUnitSkin()
+    {
+        UnitSkin = this.transform.GetChild(0).gameObject;
+        this.GetComponent<unitMaterielManager>().setUp(UnitSkin);
+    }
 
     /// <summary>
     /// Function to handle all the logic to move a unit from one block to another one.
@@ -101,7 +109,7 @@ public class BaseUnit : MonoBehaviour
 
         if(UnitSkin == null)
         {
-            UnitSkin = this.transform.GetChild(0).gameObject;
+            helperLinkUnitSkin();
         }
         if(GameManager.Instance.State != GameManager.GameState.PlayerTurn)
         {
@@ -240,7 +248,7 @@ public class BaseUnit : MonoBehaviour
         if(fallingOverboard == false)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetedPlatfromPosition, step);
-            if (Vector3.Distance(transform.position, targetedPlatfromPosition) < 0.0001f)
+            if (Vector3.Distance(transform.position, targetedPlatfromPosition) < 0.01f)
             {
                 // Swap the position of the cylinder.
                 //targetedPlatfromPosition *= -1.0f;
