@@ -113,7 +113,7 @@ public class textUiManager : MonoBehaviour
 
     IEnumerator reachEndPlatfromTime()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         //Do animation
         turnIndicator.text = "Game Ended";
         turnIndicator.color = EnvironmentChangeColour;
@@ -134,6 +134,8 @@ public class textUiManager : MonoBehaviour
         else
         {
             GameEndedCanvasRef.SetActive(true);
+            LeanTween.scale(GameEndedCanvasRef.transform.GetChild(1).gameObject, new Vector3(1, 1, 1), 0.25f);
+            LeanTween.moveY(GameEndedCanvasRef.transform.GetChild(1).gameObject, GameEndedCanvasRef.transform.GetChild(2).transform.position.y, 0.25f);
         }
 
         switch (GameManager.Instance.endOfGameManager.endReason)

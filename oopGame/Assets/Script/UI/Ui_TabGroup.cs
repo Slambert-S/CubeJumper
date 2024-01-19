@@ -42,11 +42,13 @@ public class Ui_TabGroup : MonoBehaviour
         {
             if(i == index)
             {
-                objectToSwap[i].SetActive(true);
+                // objectToSwap[i].SetActive(true);
+                LeanTween.scaleY(objectToSwap[i],1,0.1f);
             }
             else
             {
-                objectToSwap[i].SetActive(false);
+                // objectToSwap[i].SetActive(false);
+                LeanTween.scaleY(objectToSwap[i], 0, 0f);
             }
         }
     }

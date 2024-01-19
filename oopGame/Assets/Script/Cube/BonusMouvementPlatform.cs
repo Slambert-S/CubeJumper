@@ -21,13 +21,24 @@ public class BonusMouvementPlatform : BasicPlatform
        
         if (playerIsOnTop == true)
         {
-            if (audioSource != null)
-            {
-                audioSource.PlayOneShot(bonusSound);
-            }
+            
             //Debug.Log(unitOnTopReference);
             BaseBuff newbuff = unitOnTopReference.gameObject.AddComponent<MouvementBuff>();
             unitOnTopReference.GetComponent<BuffManager>().addNewBuff(newbuff);
+            if (audioSource != null)
+            {
+                audioSource.PlayOneShot(bonusSound);
+
+                //unitOnTopReference.GetComponent<unitMaterielManager>().ActivateYellowShader();
+                StartCoroutine("changeShader");
+            }
         }
+    }
+
+    private IEnumerator changeShader()
+    {
+        unitOnTopReference.GetComponent<unitMaterielManager>().ActivateYellowShader();
+        yield return new WaitForSeconds(1);
+        unitOnTopReference.GetComponent<unitMaterielManager>().DeactivateYellowShader();
     }
 }

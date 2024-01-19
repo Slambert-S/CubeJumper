@@ -22,7 +22,10 @@ public class BaseUnit : MonoBehaviour
     private AudioSource audioSource;
 
     [SerializeField]
-    private GameObject UnitSkin;
+    //public GameObject UnitSkin { get; private set; }
+    public GameObject UnitSkin;
+    public BaseAnimationManager animationManager { get; private set; }
+
     [SerializeField]
     private float yDistenceCheckedWhenMoving;
     [SerializeField]
@@ -69,6 +72,7 @@ public class BaseUnit : MonoBehaviour
         statRef = this.gameObject.GetComponent<unitStat>();
         UpdatePlayerMouvementUI();
         audioSource = this.gameObject.GetComponent<AudioSource>();
+        animationManager = this.GetComponent<BaseAnimationManager>();
 
 
     }
@@ -81,6 +85,7 @@ public class BaseUnit : MonoBehaviour
         {
             moveUnitOverTime();
         }
+       // helperLinkUnitSkin();
     }
 
 
@@ -88,17 +93,30 @@ public class BaseUnit : MonoBehaviour
     public void addBonusMouvement(int number)
    {
         mouvementActionAvailable += number;
-   }
+       // this.GetComponent<unitMaterielManager>().ActivateYelloShader();
+    }
 
    public void changeHpValue(int value)
    {
         statRef.ChangeHP = value;
    }
 
+    public void UnitModelUpdated()
+    {
+        Debug.Log("Unit model Updated is called");
+        helperLinkUnitSkin();
+    }
+
     private void helperLinkUnitSkin()
     {
         UnitSkin = this.transform.GetChild(0).gameObject;
+
         this.GetComponent<unitMaterielManager>().setUp(UnitSkin);
+
+        this.GetComponent<UnitySkinSetUp>().shaderSetUp();
+
+        animationManager = this.GetComponent<BaseAnimationManager>();
+        animationManager.doInitialisation();
     }
 
     /// <summary>
@@ -231,7 +249,8 @@ public class BaseUnit : MonoBehaviour
         }
         else
         {
-            audioSource.PlayOneShot(jumpSound);
+            SoundFXManager.instance.PlaySoundFXClip(jumpSound, this.transform, 1f);
+         //   audioSource.PlayOneShot(jumpSound);
         }
     }
     

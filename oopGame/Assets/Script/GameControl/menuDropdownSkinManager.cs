@@ -34,6 +34,7 @@ public class menuDropdownSkinManager : MonoBehaviour
     }
     void Start()
     {
+        Debug.Log("activation of the skin selector");
         if (SkinDatabase.Instance != null)
         {
             skinDb = SkinDatabase.Instance;

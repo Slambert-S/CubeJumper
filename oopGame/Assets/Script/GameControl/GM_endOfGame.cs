@@ -18,7 +18,7 @@ public class GM_endOfGame : MonoBehaviour
             case GameEndedState.PlayerDeath:
                 Debug.Log("You are dead");
 
-                Time.timeScale = 0;
+                StartCoroutine("executeDeatTiming");
                 break;
         }
 
@@ -29,6 +29,11 @@ public class GM_endOfGame : MonoBehaviour
        yield  return  new WaitForSeconds(2);
         //Do animation
 
+    }
+    IEnumerator executeDeatTiming()
+    {
+        yield return new WaitForSeconds(4);
+        Time.timeScale = 0;
     }
     public enum GameEndedState
     {

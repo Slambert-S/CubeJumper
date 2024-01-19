@@ -57,6 +57,7 @@ public class Ui_tabButtonCustum : MonoBehaviour, IPointerEnterHandler, IPointerC
         if (onTabSelected != null)
         {
             onTabSelected.Invoke();
+            ResetTabs();
         }
     }
 

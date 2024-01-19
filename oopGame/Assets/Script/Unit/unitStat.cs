@@ -86,8 +86,10 @@ public class unitStat : MonoBehaviour
         if (_currentHP <= 0)
         {
             //Debug.Log("DEBUG : You dead");
+            this.GetComponent<BaseUnit>().animationManager.SetDeathAnimation();
             GameManager.Instance.endOfGameManager.endReason = GM_endOfGame.GameEndedState.PlayerDeath;
             GameManager.Instance.UpdateGameState(GameManager.GameState.GameEnded);
+            
         }
     }
 }
