@@ -19,6 +19,8 @@ public class Ui_tabButtonCustum : MonoBehaviour, IPointerEnterHandler, IPointerC
     public Color tabHover;
     public Color tabActive;
 
+    public AudioClip clickAudio;
+
     public void OnPointerClick(PointerEventData eventData)
     {
         ResetTabs();
@@ -56,6 +58,7 @@ public class Ui_tabButtonCustum : MonoBehaviour, IPointerEnterHandler, IPointerC
     {
         if (onTabSelected != null)
         {
+            SoundFXManager.instance.PlaySoundFXClip(clickAudio, this.transform, 0.75f);
             onTabSelected.Invoke();
             ResetTabs();
         }

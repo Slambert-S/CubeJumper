@@ -96,7 +96,7 @@ public class PlayerClick : MonoBehaviour
         }
         
         mainCamera.gameObject.GetComponent<CameraDrag>().testDraging(context);
-        Debug.Log(context.phase);
+        //Debug.Log(context.phase);
         //print the current mouse position on the playing field  as a vector 2
         //Debug.Log(context.ReadValue<Vector2>());
 

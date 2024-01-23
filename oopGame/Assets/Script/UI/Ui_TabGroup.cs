@@ -11,6 +11,7 @@ public class Ui_TabGroup : MonoBehaviour
     public Color tabActive;
     public Ui_TabButton selectedTab;
     public List<GameObject> objectToSwap;
+    public AudioClip clickAudio;
     public void Subscribe(Ui_TabButton button)
     {
         if(tabButtons == null)
@@ -51,6 +52,8 @@ public class Ui_TabGroup : MonoBehaviour
                 LeanTween.scaleY(objectToSwap[i], 0, 0f);
             }
         }
+
+        SoundFXManager.instance.PlaySoundFXClip(clickAudio, this.transform, 0.75f); 
     }
 
     public void ResetTabs()

@@ -27,6 +27,7 @@ public class unitStat : MonoBehaviour
         }
     }
 
+    //Encapsulation
     public int ChangeHP
     {
         set

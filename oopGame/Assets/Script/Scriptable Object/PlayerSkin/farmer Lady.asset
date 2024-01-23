@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a778ff3be977254418e7a71f2b36e702, type: 3}
   m_Name: farmer Lady
   m_EditorClassIdentifier: 
-  name: Farmer (2)
+  name: Farmer W
   model: {fileID: 100046, guid: 2af1fa464b69e4c4cb1a408373c7d971, type: 3}

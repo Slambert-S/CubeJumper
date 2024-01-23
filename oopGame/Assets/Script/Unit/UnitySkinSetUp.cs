@@ -26,6 +26,7 @@ public class UnitySkinSetUp : MonoBehaviour
     {
         GameObject unitSkinRef = this.transform.GetChild(0).gameObject;
         rendererList.Clear();
+        // Save all active child that have a renderer
         foreach (Transform activeObject in unitSkinRef.transform)
         {
             if (activeObject.GetComponent<Renderer>() && activeObject.gameObject.activeSelf == true)
@@ -34,6 +35,7 @@ public class UnitySkinSetUp : MonoBehaviour
             }
         }
         OriginalTexture = rendererList[0].materials[0].GetTexture("_MainTex");
+
         // Material []newMat = rendererList[0].materials;
         // newMat[0].shader = newShader;
         foreach(Renderer rend in rendererList)

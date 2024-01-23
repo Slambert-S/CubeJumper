@@ -5,6 +5,8 @@ using UnityEngine;
 public class skipTurnButton : MonoBehaviour
 {
     // Start is called before the first frame update
+    public AudioClip clickAudio;
+
     void Start()
     {
         
@@ -20,6 +22,7 @@ public class skipTurnButton : MonoBehaviour
     {
         if(GameManager.Instance.State == GameManager.GameState.PlayerTurn)
         {
+            SoundFXManager.instance.PlaySoundFXClip(clickAudio, this.transform, 0.75f);
             GameManager.Instance.UpdateGameState(GameManager.GameState.EnvironmentTurn);
             GameManager.Instance.GetComponent<SkinLoadingManager>().playerRef.GetComponent<BaseUnit>().changeHpValue(-1);
         }

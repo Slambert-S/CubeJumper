@@ -105,11 +105,12 @@ public class BasicPlatform : MonoBehaviour
         return false;
     }
 
+    /// Encapsulation
     public  bool CanGoOnTop()
     {
         return CanBeWalkedON;
     }
-
+    /// Encapsulation
     public Transform GetPositionOnTop()
     {
         return PositionReference;

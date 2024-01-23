@@ -23,6 +23,13 @@ public class textUiManager : MonoBehaviour
 
     public GameObject GameEndedCanvasRef;
     public GameObject gameUIRef;
+
+
+    [SerializeField]
+    private TMP_Text textForNbTurn;
+       
+    [SerializeField]
+    private TMP_Text endOfGameTitle;
     [SerializeField]
     private TMP_Text endOfGameMessage;
 
@@ -41,7 +48,12 @@ public class textUiManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            GameEndedCanvasRef.SetActive(true);
+            LeanTween.scale(GameEndedCanvasRef.transform.GetChild(1).gameObject, new Vector3(1, 1, 1), 0.25f);
+            LeanTween.moveY(GameEndedCanvasRef.transform.GetChild(1).gameObject, GameEndedCanvasRef.transform.GetChild(2).transform.position.y, 0.25f);
+        }
     }
 
     public void UpdateUiState(GameManager.GameState state)
@@ -141,10 +153,14 @@ public class textUiManager : MonoBehaviour
         switch (GameManager.Instance.endOfGameManager.endReason)
         {
             case GM_endOfGame.GameEndedState.GoalReached:
+                endOfGameTitle.text = "Congratulations";
+                textForNbTurn.text = "Total turn : " + TurnTraking.instance.nbTurnsinceStart ;
                 endOfGameMessage.text = "You saved your partner";
                 break;
             case GM_endOfGame.GameEndedState.PlayerDeath:
-                endOfGameMessage.text = "You died";
+                endOfGameTitle.text = "Game Over";
+                textForNbTurn.text = "Total turn " + TurnTraking.instance.nbTurnsinceStart ;
+                endOfGameMessage.text = "You died and were unable to save your partner";
                 break;
         }
 

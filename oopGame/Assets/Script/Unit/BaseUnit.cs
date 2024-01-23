@@ -21,13 +21,17 @@ public class BaseUnit : MonoBehaviour
     private AudioClip jumpSound;
     private AudioSource audioSource;
 
+    //Encapsulation
     [SerializeField]
-    //public GameObject UnitSkin { get; private set; }
-    public GameObject UnitSkin;
+    public GameObject UnitSkin { get; private set; }
+   // public GameObject UnitSkin;
+   //Encapsulation
     public BaseAnimationManager animationManager { get; private set; }
 
     [SerializeField]
     private float yDistenceCheckedWhenMoving;
+
+    //Encapsulation
     [SerializeField]
     public bool moving { [SerializeField]get; private set; } = false;
     [SerializeField]
@@ -88,7 +92,7 @@ public class BaseUnit : MonoBehaviour
        // helperLinkUnitSkin();
     }
 
-
+    //Encapsulation
     /* Section for all the function that change the stat of Base Unit*/
     public void addBonusMouvement(int number)
    {
@@ -96,7 +100,8 @@ public class BaseUnit : MonoBehaviour
        // this.GetComponent<unitMaterielManager>().ActivateYelloShader();
     }
 
-   public void changeHpValue(int value)
+    //Encapsulation
+    public void changeHpValue(int value)
    {
         statRef.ChangeHP = value;
    }
@@ -119,6 +124,7 @@ public class BaseUnit : MonoBehaviour
         animationManager.doInitialisation();
     }
 
+    //Abstaction
     /// <summary>
     /// Function to handle all the logic to move a unit from one block to another one.
     /// </summary>
@@ -164,6 +170,7 @@ public class BaseUnit : MonoBehaviour
     
     }
 
+    // Abstraction
     private bool checkToMoveToNewBox(BasicPlatform selectedPlatform)
     {
         if (selectedPlatform.CanGoOnTop())
@@ -193,6 +200,7 @@ public class BaseUnit : MonoBehaviour
         return false;
     }
 
+    // Abstraction
     private void MoveUnitVariableUpdate(BasicPlatform platfromToMoveTo, JumpType jumpType)
     {
         //Jump animation setUp;
@@ -209,6 +217,7 @@ public class BaseUnit : MonoBehaviour
         platformPlayerStandingOn.UnitMovedOnTop();
     }
 
+    // Abstraction
     //To do : refactor the jump feature 
     private void JumpAnimation(JumpType jumpType)
     {
@@ -233,6 +242,7 @@ public class BaseUnit : MonoBehaviour
         //UnitSkin.GetComponent<Animator>().SetBool("Jump_b", false);
     }
 
+    // Abstraction
     private void PlayJumpSound()
     {
 
@@ -253,8 +263,9 @@ public class BaseUnit : MonoBehaviour
          //   audioSource.PlayOneShot(jumpSound);
         }
     }
-    
+
     // To do : refactor the move Unit
+    // Abstraction
     /// <summary>
     /// When call every frame, the function will move the unit toward a targeted position. over time
     /// </summary>
@@ -310,6 +321,7 @@ public class BaseUnit : MonoBehaviour
         
     }
 
+    // Abstraction
     //Force push a unit in one direction
     //To-do : add animation and mouvement over time
     public virtual void PushUnit(BasicPlatform finalPlatform,direction direction )
@@ -342,6 +354,7 @@ public class BaseUnit : MonoBehaviour
 
     }
 
+    // Abstraction
     private bool CheckIfplayerHaveEnuphMovement()
     {
         if(mouvementActionAvailable > 0)
