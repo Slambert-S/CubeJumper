@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Inheritence Child
 public class PushPlatfrom : BasicPlatform
 {
     private int pushDistance = 2;
@@ -18,6 +19,7 @@ public class PushPlatfrom : BasicPlatform
         pushParticle = this.transform.parent.GetComponentInChildren<ParticleSystem>();
     }
 
+    //Polymorphism Child
     // Update is called once per frame
     public override void testDoAction()
     {

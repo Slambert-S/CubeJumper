@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Inheritence Parent
 public class BasicPlatform : MonoBehaviour
 {
     [SerializeField]
@@ -143,6 +144,8 @@ public class BasicPlatform : MonoBehaviour
        // Debug.Log("Basic box did an action");
     }
 
+
+    //Polymorphysm Parent
     /// <summary>
     /// Virtual methode : is use to trigger special action when player move on top of the platfrom.
     /// </summary>

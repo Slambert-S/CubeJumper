@@ -47,6 +47,7 @@ public class unitStat : MonoBehaviour
             }
         }
     }
+
     IEnumerator PlayerLostlifeVisual()
     {
         this.GetComponent<unitMaterielManager>().ActivateRedShader();
