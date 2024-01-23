@@ -8,12 +8,30 @@ public class textUiManager : MonoBehaviour
 {
 
     public static textUiManager Instance;
-    public TMP_Text turnIndicator;
-    public TMP_Text playerMouvementIndicator;
-    public TMP_Text turnNumberIndicator;
+    [SerializeField]
+    private TMP_Text turnIndicator;
+    [SerializeField]
+    private TMP_Text playerMouvementIndicator;
+    [SerializeField]
+    private TMP_Text turnNumberIndicator;
+    [SerializeField]
+    private TMP_Text playerHpIndicator;
     public Color PlayerTurnColour;
     public Color EnvironmentTurnColour;
     public Color EnvironmentChangeColour;
+    public Color GameEndedcolour;
+
+    public GameObject GameEndedCanvasRef;
+    public GameObject gameUIRef;
+
+
+    [SerializeField]
+    private TMP_Text textForNbTurn;
+       
+    [SerializeField]
+    private TMP_Text endOfGameTitle;
+    [SerializeField]
+    private TMP_Text endOfGameMessage;
 
 
     private void Awake()
@@ -30,7 +48,12 @@ public class textUiManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            GameEndedCanvasRef.SetActive(true);
+            LeanTween.scale(GameEndedCanvasRef.transform.GetChild(1).gameObject, new Vector3(1, 1, 1), 0.25f);
+            LeanTween.moveY(GameEndedCanvasRef.transform.GetChild(1).gameObject, GameEndedCanvasRef.transform.GetChild(2).transform.position.y, 0.25f);
+        }
     }
 
     public void UpdateUiState(GameManager.GameState state)
@@ -39,7 +62,7 @@ public class textUiManager : MonoBehaviour
         {
             case GameManager.GameState.PlayerTurn:
                 //Change to player turn
-                turnIndicator.text = "Player turn";
+                turnIndicator.text = "P";
                 turnIndicator.color = PlayerTurnColour;
                 //change colour
                 //reset  mouvement
@@ -48,24 +71,108 @@ public class textUiManager : MonoBehaviour
             case GameManager.GameState.EnvironmentTurn:
                 Debug.Log("End of player turn");
                 // Change to Encironement turn
-                turnIndicator.text = "Environment turn";
+                turnIndicator.text = "E";
                 turnIndicator.color = EnvironmentTurnColour;
                 //change coulour
 
                 break;
             case GameManager.GameState.EnvironementUpdate:
                 //change to shuffeling
-                turnIndicator.text = "Envirnment changing";
+                turnIndicator.text = "S";
                 turnIndicator.color = EnvironmentChangeColour;
                 // change colour
+
+                break;
+            case GameManager.GameState.GameEnded:
+                //change to shuffeling
+                StartCoroutine("reachEndPlatfromTime");
+              /*  turnIndicator.text = "Game Ended";
+                turnIndicator.color = EnvironmentChangeColour;
+                
+                if(gameUIRef == null)
+                {
+                    Debug.LogWarning("No reference to gameUI in textUiManager");
+                }
+                else
+                {
+                    gameUIRef.SetActive(false);
+                }
+
+                if (GameEndedCanvasRef == null)
+                {
+                    Debug.LogWarning("No reference to GameEndedCanvasRef in textUiManager");
+                }
+                else
+                {
+                    GameEndedCanvasRef.SetActive(true);
+                }
+
+                switch (GameManager.Instance.endOfGameManager.endReason)
+                {
+                    case GM_endOfGame.GameEndedState.GoalReached:
+                        endOfGameMessage.text = "You saved your partner";
+                        break;
+                    case GM_endOfGame.GameEndedState.PlayerDeath:
+                        endOfGameMessage.text = "You died";
+                        break;
+                }
+
+                // change colour*/
 
                 break;
         }
     }
 
+    IEnumerator reachEndPlatfromTime()
+    {
+        yield return new WaitForSeconds(1);
+        //Do animation
+        turnIndicator.text = "Game Ended";
+        turnIndicator.color = EnvironmentChangeColour;
+
+        if (gameUIRef == null)
+        {
+            Debug.LogWarning("No reference to gameUI in textUiManager");
+        }
+        else
+        {
+            gameUIRef.SetActive(false);
+        }
+
+        if (GameEndedCanvasRef == null)
+        {
+            Debug.LogWarning("No reference to GameEndedCanvasRef in textUiManager");
+        }
+        else
+        {
+            GameEndedCanvasRef.SetActive(true);
+            LeanTween.scale(GameEndedCanvasRef.transform.GetChild(1).gameObject, new Vector3(1, 1, 1), 0.25f);
+            LeanTween.moveY(GameEndedCanvasRef.transform.GetChild(1).gameObject, GameEndedCanvasRef.transform.GetChild(2).transform.position.y, 0.25f);
+        }
+
+        switch (GameManager.Instance.endOfGameManager.endReason)
+        {
+            case GM_endOfGame.GameEndedState.GoalReached:
+                endOfGameTitle.text = "Congratulations";
+                textForNbTurn.text = "Total turn : " + TurnTraking.instance.nbTurnsinceStart ;
+                endOfGameMessage.text = "You saved your partner";
+                break;
+            case GM_endOfGame.GameEndedState.PlayerDeath:
+                endOfGameTitle.text = "Game Over";
+                textForNbTurn.text = "Total turn " + TurnTraking.instance.nbTurnsinceStart ;
+                endOfGameMessage.text = "You died and were unable to save your partner";
+                break;
+        }
+
+    }
     public void updatePlayerMouvementUi(int nbMouvement)
     {
-        playerMouvementIndicator.text = "Mouvement : " + nbMouvement;
+        playerMouvementIndicator.text = "" + nbMouvement;
+    }
+
+    public void updatePlayerHpUi(int hpValue)
+    {
+        playerHpIndicator.text = "" + hpValue;
     }
 
     public void updateTurnBeforeChange(int numberTurn)

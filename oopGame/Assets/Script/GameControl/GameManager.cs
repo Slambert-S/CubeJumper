@@ -9,17 +9,21 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public GameState State;
+    public GM_endOfGame endOfGameManager;
 
     public static event Action<GameState> OnGameStateChange;
+
+
     [SerializeField]
     private GameObject mouvementBoxParent;
     private int environmentTurnTracker = 0;
-    public int turnBetweenEnvironmentChange = 2;
+    public int turnBetweenEnvironmentChange = 3;
 
     private void Awake()
     {
         Instance = this;
         environmentTurnTracker = turnBetweenEnvironmentChange;
+        endOfGameManager = this.GetComponent<GM_endOfGame>();
     }
     // Start is called before the first frame update
     void Start()
@@ -35,6 +39,10 @@ public class GameManager : MonoBehaviour
 
     public void UpdateGameState(GameState newState)
     {
+        if(State == GameManager.GameState.GameEnded)
+        {
+            return;
+        }
         State = newState;
         switch (newState)
         {
@@ -52,12 +60,23 @@ public class GameManager : MonoBehaviour
                 HandleTerrainShuffle();
                 
                 break;
+            case GameState.GameEnded:
+                //shuffle the terrain
+                HandleHandGame();
+
+                break;
         }
 
         OnGameStateChange?.Invoke(newState);
         //update the UI after to make sure everything is ready to go
         textUiManager.Instance.UpdateUiState(newState);
 
+    }
+
+    private void HandleHandGame()
+    {
+        endOfGameManager.executeEndOfGame();
+        //Time.timeScale = 0;
     }
 
     private void HandleTerrainShuffle()
@@ -72,26 +91,35 @@ public class GameManager : MonoBehaviour
         if(mouvementBoxParent != null)
         {
             environmentTurnTracker--;
-            int i = 0;
-
-            foreach (Transform cube in mouvementBoxParent.transform)
-            {
-                if (i >= 50)
-                {
-                    break;
-                }
-                cube.GetComponentInChildren<BasicPlatform>().testDoAction();
-                i++;
-                //Debug.Log("in the changeAllCube");
-            }
-
-
-            StartCoroutine(TurnChangeDelay());
             
+
+            StartCoroutine(SmallDelay(1));
+
+        }
+        else
+        {
+            Debug.LogWarning("Need to add link to the list to mouvement box parent");
         }
 
    
         
+    }
+    IEnumerator SmallDelay(int delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        int i = 0;
+        foreach (Transform cube in mouvementBoxParent.transform)
+        {
+            if (i >= 200)
+            {
+                break;
+            }
+            cube.GetComponentInChildren<BasicPlatform>().testDoAction();
+            i++;
+            //Debug.Log("in the changeAllCube");
+        }
+        StartCoroutine(TurnChangeDelay());
+
     }
     IEnumerator TurnChangeDelay()
     {
@@ -141,6 +169,7 @@ public class GameManager : MonoBehaviour
     {
         PlayerTurn,
         EnvironmentTurn,
-        EnvironementUpdate
+        EnvironementUpdate,
+        GameEnded
     }
 }

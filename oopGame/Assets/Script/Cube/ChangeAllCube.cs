@@ -2,12 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+[System.Serializable]
+public class SpawnValue
+{
+    public GameObject spawnObject;
+    public float minPobabilityValue;
+    public float maxProbabilityValue;
+}
 
 public class ChangeAllCube : MonoBehaviour
 {
     public List<GameObject> cubePrefab = new List<GameObject>();
+    public SpawnValue[] cubePrefabWithRating ;
     private PlayerAction playerClick;
     private InputAction debugClick;
+    
     [SerializeField]
     private int numberOfBoxType = 0;
     // Start is called before the first frame update
@@ -16,6 +25,7 @@ public class ChangeAllCube : MonoBehaviour
 
         playerClick = new PlayerAction();
         numberOfBoxType = cubePrefab.Count;
+
     }
   
   
@@ -74,6 +84,10 @@ public class ChangeAllCube : MonoBehaviour
          }
      }*/
 
+    public void debugChangeaAllCube()
+    {
+        changeAllCube();
+    }
 
   
 
@@ -86,21 +100,34 @@ public class ChangeAllCube : MonoBehaviour
     IEnumerator changeAllCubeWithTimeDelay()
     {
         //Print the time of when the function is first called.
-       // Debug.Log("Started of shuffle turn at timestamp : " + Time.time);
+        // Debug.Log("Started of shuffle turn at timestamp : " + Time.time);
 
         //yield on a new YieldInstruction that waits for 5 seconds.
-        yield return new WaitForSeconds(2);
+        
+#if UNITY_EDITOR
+        if (Application.isPlaying)
+        {
+            yield return new WaitForSeconds(2);
+            BoxGenerationLogic.Instance.resetValue();
+        }
+        else
+        {
+            yield return new WaitForSeconds(0);
+        }
 
+#endif
+        
 
         int i = 0;
 
         foreach (Transform cube in transform)
         {
-            if (i >= 50)
+            if (i >= 100)
             {
                 break;
             }
-            cube.GetComponentInChildren<BasicPlatform>().ChangeCubeObject(cubePrefab[GetBoxType()]);
+            int newBoxTypeIndex = GetBoxType();
+            cube.GetComponentInChildren<BasicPlatform>().ChangeCubeObject(cubePrefabWithRating[newBoxTypeIndex].spawnObject,(cubeTypeController.CubeType) newBoxTypeIndex);
             i++;
            // Debug.Log("in the changeAllCube");
         }
@@ -110,20 +137,93 @@ public class ChangeAllCube : MonoBehaviour
             cube.GetComponentInChildren<BasicPlatform>().identifyNeighbour();
            // Debug.Log("I got my neighbour");
         }
+        
+#if UNITY_EDITOR
+        if (Application.isPlaying)
+        {
+            yield return new WaitForSeconds(1);
+        }
 
-        yield return new WaitForSeconds(1);
+#endif
+        
+
         foreach (StartPlatform platform in GameObject.FindObjectsOfType<StartPlatform>())
         {
             platform.identifyNeighbour();
         };
-        GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerTurn);
 
+        foreach(EndPlatform platform in GameObject.FindObjectsOfType<EndPlatform>())
+        {
+            platform.identifyNeighbour();
+        }
+
+        
+//#if UNITY_EDITOR
+        if (Application.isPlaying)
+        {
+            GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerTurn);
+        }
+        
+//#endif
+        
         //After we have waited 5 seconds print the time again.
-       // Debug.Log("Finished of Shuffle turn at timestamp : " + Time.time);
+        // Debug.Log("Finished of Shuffle turn at timestamp : " + Time.time);
+        yield return null;
     }
 
     private int GetBoxType() //Select a random new block, some condition will have to be met for some type of block
     {
-        return Random.Range(0, numberOfBoxType);
+        
+//#if UNITY_EDITOR
+        int boxIndex = 0;
+        bool boxTypeIsAvailable = false;
+        int infiniteLoopPrevention = 0;
+        do
+        {
+            infiniteLoopPrevention++;
+            if (Application.isPlaying)
+            {
+                boxIndex = getCustumProbability();
+                boxTypeIsAvailable = BoxGenerationLogic.Instance.checkBoxAvalability((cubeTypeController.CubeType)boxIndex);
+            }
+            else
+            {
+                Debug.Log("Custom probability result : " + getCustumProbability());
+                boxIndex = getCustumProbability();
+                boxTypeIsAvailable = this.GetComponent<BoxGenerationLogic>().checkBoxAvalability((cubeTypeController.CubeType)boxIndex);
+                Debug.Log(boxIndex);
+            }
+           // boxTypeIsAvailable = BoxGenerationLogic.Instance.checkBoxAvalability((cubeTypeController.CubeType)boxIndex);
+            if(infiniteLoopPrevention >= 100)
+            {
+                boxTypeIsAvailable = true;
+                boxIndex = 0; // The Game will never be block if a basic bloc is added in extra
+            }
+        } while (boxTypeIsAvailable == false);
+        
+
+        return boxIndex;
+        
+//#endif
+        
+  //      return 0;
+    }
+
+    private int getCustumProbability()
+    {
+        float number = Random.Range(0.0f, 100.0f);
+        int i  = 0;
+        foreach(SpawnValue boxTypeRef in cubePrefabWithRating)
+        {
+            if(number >= boxTypeRef.minPobabilityValue && number <= boxTypeRef.maxProbabilityValue)
+            {
+                return i;
+            }
+            i++;
+        }
+
+        return 0;
     }
 }
+
+

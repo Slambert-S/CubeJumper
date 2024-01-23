@@ -49,18 +49,9 @@ public class ClickTest : MonoBehaviour
                 GameObject target = hit.collider.gameObject.GetComponent<BasicPlatform>().gameObject;
                 transform.LookAt(new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z));
 
-                this.gameObject.GetComponent<BaseUnit>().MoveTo(hit.collider.gameObject.GetComponent<BasicPlatform>());
+                this.gameObject.GetComponent<BaseUnit>().MoveToBlock(hit.collider.gameObject.GetComponent<BasicPlatform>());
                
 
-                
-              //  Debug.Log("Player position "+transform.position) ;
-                //Debug.Log("Object position " + target.transform.position);
-
-                /*  Vector3 noZaxisPosition = new Vector3(target.transform.position.x, this.gameObject.transform.position.y, target.transform.position.z);
-                  Vector3 directionToTarget = noZaxisPosition - this.transform.position ;
-                  Vector3 newFacingDirection = new Vector3(directionToTarget.x, directionToTarget.y, this.transform.position.z);
-                  Debug.Log(Vector3.Angle(noZaxisPosition, transform.forward));
-                  this.transform.right = directionToTarget;*/
 
 
             }

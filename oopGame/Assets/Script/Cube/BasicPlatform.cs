@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Inheritence Parent
 public class BasicPlatform : MonoBehaviour
 {
     [SerializeField]
-    private List<GameObject> neighbourList = new List<GameObject>(4);
+    protected List<GameObject> neighbourList = new List<GameObject>(4);
     [SerializeField]
     private Transform PositionReference;
     [SerializeField]
     private bool CanBeWalkedON = true;
+
+    private cubeTypeController.CubeType currentCubeType = cubeTypeController.CubeType.Normal;
 
    // [SerializeField]
     public BaseUnit unitOnTopReference; // To-Do improve privacy
@@ -103,11 +106,12 @@ public class BasicPlatform : MonoBehaviour
         return false;
     }
 
+    /// Encapsulation
     public  bool CanGoOnTop()
     {
         return CanBeWalkedON;
     }
-
+    /// Encapsulation
     public Transform GetPositionOnTop()
     {
         return PositionReference;
@@ -140,13 +144,88 @@ public class BasicPlatform : MonoBehaviour
        // Debug.Log("Basic box did an action");
     }
 
-    public void ChangeCubeObject(GameObject newBox)
+
+    //Polymorphysm Parent
+    /// <summary>
+    /// Virtual methode : is use to trigger special action when player move on top of the platfrom.
+    /// </summary>
+    public virtual void UnitMovedOnTop()
     {
-        if (!playerIsOnTop)
+
+    }
+
+    public BasicPlatform GetInfoBeforePushingPlayer(GameObject neighbour , int side , int level, out bool fellOf)
+    {
+     
+        if(level > 0)
+        {
+            level--;
+            if (neighbourList[side] == null)
+            {
+                Debug.Log("Player Would have fall");
+                fellOf = true;
+                return this;
+              
+            }
+            if(neighbourList[side].GetComponent<BasicPlatform>().CanBeWalkedON == false)
+            {
+                Debug.Log("Player hit a rock");
+                fellOf = false;
+                return this;
+            }
+            // recursive call to the next neighbour
+            BasicPlatform tempNeighbour = neighbourList[side].GetComponent<BasicPlatform>().GetInfoBeforePushingPlayer(neighbour, side, level, out fellOf);
+
+            return tempNeighbour;
+        }
+        else
+        {
+            fellOf = false;
+            return this;
+        }
+  
+    }
+
+    public void ChangeCubeObject(GameObject newBox, cubeTypeController.CubeType newCubeType)
+    {
+        bool fixType = this.transform.parent.transform.parent.GetComponent<cubeTypeController>().fixType;
+#if UNITY_EDITOR
+        if (!playerIsOnTop && fixType == false)
+        {
+
+            //To do  handle the generation logic when randomizing cube in editor mode
+            if (BoxGenerationLogic.Instance)
+            {
+                BoxGenerationLogic.Instance.removeOldBoxType(currentCubeType);
+                Instantiate(newBox, this.transform.position, this.transform.rotation, this.transform.parent.transform.parent);
+                // GameObject.Destroy(this.gameObject.transform.parent.gameObject);
+                DestroyImmediate(this.gameObject.transform.parent.gameObject);
+                BoxGenerationLogic.Instance.AddNewBoxType(newCubeType);
+                currentCubeType = newCubeType;
+            }
+            else
+            {
+                //Debug.LogWarning("BoxGenerationLogic has no valid Instance");
+                
+                BoxGenerationLogic refference = gameObject.transform.parent.parent.parent.GetComponent<BoxGenerationLogic>();
+                refference.removeOldBoxType(currentCubeType);
+                Instantiate(newBox, this.transform.position, this.transform.rotation, this.transform.parent.transform.parent);
+                // GameObject.Destroy(this.gameObject.transform.parent.gameObject);
+                DestroyImmediate(this.gameObject.transform.parent.gameObject);
+                refference.AddNewBoxType(newCubeType);
+                currentCubeType = newCubeType;
+            }
+            
+        }
+#else
+
+        if (!playerIsOnTop && fixType == false)
         {
             Instantiate(newBox, this.transform.position, this.transform.rotation, this.transform.parent.transform.parent);
             GameObject.Destroy(this.gameObject.transform.parent.gameObject);
         }
+
+#endif
 
     }
 

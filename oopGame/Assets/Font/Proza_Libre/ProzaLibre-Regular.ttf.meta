@@ -1,0 +1,27 @@
+fileFormatVersion: 2
+guid: b6d2bd7ad9b91b84fb75708116801cf4
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Proza Libre
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: f4e7958e2d77fdb43859a4478ee4fced, type: 3}
+  - {fileID: 12800000, guid: 76e32213f6ced7e468a5fff8f2ad5ffe, type: 3}
+  - {fileID: 12800000, guid: e0dfb4d5ecc28e24185899baf01325b1, type: 3}
+  - {fileID: 12800000, guid: c3980ffef8801ae47ab71f97573d35db, type: 3}
+  - {fileID: 12800000, guid: 9649afd51dd4e9845b42e2b77872c8bb, type: 3}
+  - {fileID: 12800000, guid: 20728c2c14b558e40bad430b6a875f23, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
